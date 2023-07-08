@@ -1,41 +1,45 @@
-import {Document, Schema, model, Types} from "mongoose";
+import {Document, Schema, model, Types, NextFunction} from "mongoose";
+import slugify from "slugify";
 
 export interface IDish extends Document{
     name: string;
-    cooker: Types.ObjectId;
+    cook: Types.ObjectId;
+    review: Types.ObjectId;
     description: string;
     images: string[];
     quantity: number;
     price: number;
     category: "vegeterian" | "non-vegeterian" | "gluten-free" | "vegan";
-    sold? : boolean;
+    specificAllergies: string[];
+    soldOut? : boolean;
     slug? : string;
-    ratingsAvagare?: number;
-    ratingsQuantity?: number
 }
 
 const DishSchema = new Schema<IDish>({
     name: {
         type: String,
+        minlength: [2, 'Too short dish title'], 
+        maxlength: [100, 'Too long dish title'],
         required: true
     },
-    cooker: {
+    cook: {
         type: Schema.Types.ObjectId, 
         ref: 'User'
     },
+    review: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Review'
+    },
     description: {
         type: String,
-        required: true
+        required: [true, 'Product description is required'], 
+        minlength: [20, 'Too short dish description']
     },
-    images: {
-        type: [
-            {
-              type: String,
-              required: true,
-            },
-        ],
-        minlength: 1,
-    },
+    images: [{
+        type: String,
+        required: true,
+        minlength: [1, 'Add at least 1 image']
+    }],
     quantity: {
         type: Number,
         required: true
@@ -47,17 +51,40 @@ const DishSchema = new Schema<IDish>({
     category: {
         required: true,
         type: String,
-        enum: ["vegeterian", "non-vegeterian", "gluten-free", "vegan"]
+        enum: {
+            values: ["vegeterian", "non-vegeterian", "gluten-free", "vegan"],
+            message: '{VALUE} is not supported'
+        }
     },
-    sold: Boolean,
-    slug: String,
-    ratingsAvarage: Number,
-    ratingsQuantity: Number,
+    specificAllergies: [{
+        type: String,
+        default: "none"
+    }],
+    slug: {
+        type: String,
+        unique: true
+    },
+    soldOut: Boolean
 },
 {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true }
 })
+
+
+DishSchema.pre<IDish>("validate", async function (this: IDish, next: NextFunction) {
+    try {
+      const slug = slugify(this.name, { lower: true, strict: true });
+      this.slug = slug;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
 
 const Dish = model<IDish>("Dish", DishSchema);
 
 export default Dish;
+
+
