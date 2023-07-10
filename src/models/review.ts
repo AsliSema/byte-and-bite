@@ -1,13 +1,10 @@
 import { Schema, model, Types, Document } from 'mongoose';
 
 interface IReview extends Document {
-  _id: string;
   user: Types.ObjectId;
   dish: Types.ObjectId;
   comment?: string;
   rating: number;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 const reviewSchema = new Schema<IReview>(

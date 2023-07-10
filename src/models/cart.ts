@@ -1,12 +1,9 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
 export interface ICart extends Document {
-  _id: string;
   cartItems: Array<{ product: Types.ObjectId; quantity: number }>;
   totalCartPrice: number;
   user: Types.ObjectId;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 const cartSchema = new Schema<ICart>(
