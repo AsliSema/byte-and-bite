@@ -3,37 +3,51 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 // Define the user schema
 interface UserSchema extends Document {
-  name: string;
+  firstname: string;
+  lastname: string;
   email: string;
   phone: string;
   profileImage: string;
   password: string;
-  role: 'admin' | 'cooker' | 'customer';
+  role: 'admin' | 'cook' | 'customer';
   isActive: boolean;
   address: string;
 }
 
 const userSchema: Schema<UserSchema> = new Schema({
-  name: {
+  firstname: {
     type: String,
-    required: true
+    required: [true,'First name is required']
+  },
+  lastname: {
+    type: String,
+    required: [true,'Last name is required']
   },
   email: {
     type: String,
-    required: true,
-    unique: true
+    required: [true, 'Email is required'],
+    unique: true,
+    validate: {
+        validator: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        message: 'Invalid email format'
+    }
   },
   phone: {
     type: String,
-    required: true
+    required: [true, 'Phone number is required'],
+    validate: {
+      validator: (value: string) => /^\d{10}$/.test(value),
+      message: 'Invalid phone number format'
+    }
   },
   profileImage: {
     type: String,
-    required: true
+    required: [true, 'Profile image is required']
   },
   password: {
     type: String,
-    required: true
+    required: [true, 'Password is required'],
+    minlength: [6, 'Password must have at least 6 characters']
   },
   role: {
     type: String,
