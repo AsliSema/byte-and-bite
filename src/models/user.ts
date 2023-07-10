@@ -1,6 +1,13 @@
 // Import the necessary modules
 import mongoose, { Document, Schema } from 'mongoose';
 
+interface Address {
+  city: string;
+  district: string;
+  neighborhood: string;
+  streetAddress: string;
+}
+
 // Define the user schema
 interface UserSchema extends Document {
   firstname: string;
@@ -13,6 +20,25 @@ interface UserSchema extends Document {
   isActive: boolean;
   address: string;
 }
+
+const addressSchema: Schema<Address> = new Schema({
+  city: {
+    type: String,
+    required: [true, 'City is required']
+  },
+  district: {
+    type: String,
+    required: [true, 'District is required']
+  },
+  neighborhood: {
+    type: String,
+    required: [true, 'Neighborhood is required']
+  },
+  streetAddress: {
+    type: String,
+    required: [true, 'Street address is required']
+  }
+});
 
 const userSchema: Schema<UserSchema> = new Schema({
   firstname: {
@@ -51,7 +77,7 @@ const userSchema: Schema<UserSchema> = new Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'cooker', 'customer'],
+    enum: ['admin', 'cook', 'customer'],
     default: 'customer'
   },
   isActive: {
