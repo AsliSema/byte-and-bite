@@ -41,17 +41,6 @@
     "prettier": "^2.5.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js, json, css, md, html}":[
-      "prettier --single-qoutr --write",
-      "git add"
-    ]
   }
 }
 
-}
