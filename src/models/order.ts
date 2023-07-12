@@ -31,5 +31,6 @@ const orderSchema = new Schema<IOrder>(
 },
 {timestamps: true}
 );
+
 const Order = model<IOrder>('Order', orderSchema);
 export default Order;
