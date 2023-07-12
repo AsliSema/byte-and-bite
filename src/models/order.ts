@@ -1,36 +1,35 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema, model, Document, Types } from 'mongoose';
 
-const orderItemSchema = new Schema({
-  name: { type: String, required: true },
-  quantity: { type: Number, required: true },
-  price: { type: Number, required: true },
-});
-
-const orderSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  cookId: { type: Schema.Types.ObjectId, ref: 'Cook' },
-  orderItems: [orderItemSchema],
-  deliveryFee: { type: Number, required: true },
-  totalOrderPrice: { type: Number, required: true },
-  paymentMethodType: { type: String, required: true },
-  isPaid: { type: Boolean, default: false },
-  paidAt: { type: Date },
-});
-
-
-interface IOrder extends Document {
-  user: string;
-  cookId?: string;
-  orderItems: {
-    name: string;
-    quantity: number;
-    price: number;
-  }[];
+export interface IOrder extends Document {
+  user: Types.ObjectId;
+  cookId: string;
+  orderItems: Array<{product: Types.ObjectId; quantity: number; }>;
   deliveryFee: number;
   totalOrderPrice: number;
   paymentMethodType: string;
-  isPaid: boolean;
-  paidAt?: Date;
 }
 
-export const Order = mongoose.model<IOrder>('Order', orderSchema);
+const orderSchema = new Schema<IOrder>(
+  {
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  cookId: String,
+  orderItems: [
+    {
+      product: {
+        type: Types.ObjectId,
+        ref: 'Dish',
+      },
+      quantity: {
+        type: Number,
+        default: 1,
+      },
+    },
+  ],
+  deliveryFee: { type: Number, default: 0 },
+  totalOrderPrice: { type: Number, default: 0 },
+  paymentMethodType: { type: String, default: 'Cash' }
+},
+{timestamps: true}
+);
+const Order = model<IOrder>('Order', orderSchema);
+export default Order;
