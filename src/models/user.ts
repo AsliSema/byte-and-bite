@@ -2,15 +2,15 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 // Define the user schema
-interface UserSchema extends Document {
+export interface IUser extends Document {
   firstname: string;
   lastname: string;
   email: string;
   phone: string;
   profileImage: string;
   password: string;
-  role: 'admin' | 'cook' | 'customer';
-  isActive: boolean;
+  role?: 'admin' | 'cook' | 'customer';
+  isActive?: boolean;
   address: {
     city: string;
     district: string;
@@ -20,7 +20,7 @@ interface UserSchema extends Document {
 }
 
 
-const userSchema: Schema<UserSchema> = new Schema({
+const userSchema= new Schema<IUser>({
   firstname: {
     type: String,
     required: [true,'First name is required']
@@ -33,10 +33,7 @@ const userSchema: Schema<UserSchema> = new Schema({
     type: String,
     required: [true, 'Email is required'],
     unique: true,
-    validate: {
-        validator: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-        message: 'Invalid email format'
-    }
+
   },
   phone: {
     type: String,
@@ -79,14 +76,15 @@ const userSchema: Schema<UserSchema> = new Schema({
     },
     streetAddress: {
       type: String,
-      required: [true, 'Street address is required']
+      required: [true, 'Street address is required'],
+      timestamp:true
     }
   }
 });
 
 // Create the user model
-const UserModel = mongoose.model<UserSchema>('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
-// Export the user model
-export default UserModel;
+// Export the user
+export default User;
 
