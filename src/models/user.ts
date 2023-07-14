@@ -11,14 +11,15 @@ export interface IUser extends Document {
   password: string;
   role?: 'admin' | 'cook' | 'customer';
   isActive?: boolean;
-  address: {
-    city: string;
-    district: string;
-    neighborhood: string;
-    streetAddress: string;
-  };
+  address: Address;
 }
 
+interface Address {
+  city: string;
+  district: string;
+  neighborhood: string;
+  streetAddress: string;
+}
 
 const userSchema= new Schema<IUser>({
   firstname: {
@@ -77,14 +78,14 @@ const userSchema= new Schema<IUser>({
     streetAddress: {
       type: String,
       required: [true, 'Street address is required'],
-      timestamp:true
-    }
+    },
   }
-});
+},
+      { timestamps: true }
+);
 
 // Create the user model
 const User = mongoose.model<IUser>('User', userSchema);
 
 // Export the user
 export default User;
-
