@@ -1,11 +1,10 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { ApiError } from './utils/apiError';
 import { config } from './config/config';
 import { errorHandlerMiddleware } from './utils/globalErrorHandler';
 
 import connectToDatabase from './db/connection';
 import bodyParser from 'body-parser';
-
 
 const app = express();
 
