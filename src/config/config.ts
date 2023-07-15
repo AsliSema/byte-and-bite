@@ -9,6 +9,8 @@ const DB_CONN_STRING = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@byteandbitec
 
 const SERVER_PORT = process.env.SERVER_PORT || 1337;
 
+const JWT_SECRET = process.env.JWT_SECRET || '';
+
 export const config = {
     mongo: {
         url: DB_CONN_STRING,
@@ -16,5 +18,8 @@ export const config = {
     },
     server: {
         port: SERVER_PORT
+    },
+    jwt: {
+        secret: JWT_SECRET
     }
 }

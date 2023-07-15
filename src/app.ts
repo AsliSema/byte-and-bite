@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import { ApiError } from './utils/apiError';
 import { config } from './config/config';
 import { errorHandlerMiddleware } from './utils/globalErrorHandler';
+import { StatusCodes } from "http-status-codes";
+import authRoutes from './routes/auth'
 
 import connectToDatabase from './db/connection';
 import bodyParser from 'body-parser';
@@ -11,15 +13,18 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
 
-connectToDatabase();
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express TS Version');
 });
 
+app.use("/api/users/", authRoutes);
+
+connectToDatabase();
+
 // generating error for undefined routes
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  next(new ApiError(400, `This route: ${req.originalUrl} is not exist!`));
+  next(new ApiError(StatusCodes.BAD_REQUEST, `This route: ${req.originalUrl} is not exist!`));
 });
 
 // a global error middleware that catch errors and present them in a structured way.
