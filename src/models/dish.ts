@@ -1,7 +1,7 @@
-import {Document, Schema, model, Types, NextFunction} from "mongoose";
+import { Document, Schema, model, Types } from "mongoose";
 import slugify from "slugify";
 
-export interface IDish extends Document{
+export interface IDish extends Document {
     name: string;
     cook: Types.ObjectId;
     review: Types.ObjectId;
@@ -11,28 +11,28 @@ export interface IDish extends Document{
     price: number;
     category: "vegeterian" | "non-vegeterian" | "gluten-free" | "vegan";
     specificAllergies: string[];
-    soldOut? : boolean;
-    slug? : string;
+    soldOut?: boolean;
+    slug?: string;
 }
 
 const DishSchema = new Schema<IDish>({
     name: {
         type: String,
-        minlength: [2, 'Too short dish title'], 
+        minlength: [2, 'Too short dish title'],
         maxlength: [100, 'Too long dish title'],
         required: true
     },
     cook: {
-        type: Schema.Types.ObjectId, 
+        type: Schema.Types.ObjectId,
         ref: 'User'
     },
     review: {
-        type: Schema.Types.ObjectId, 
+        type: Schema.Types.ObjectId,
         ref: 'Review'
     },
     description: {
         type: String,
-        required: [true, 'Product description is required'], 
+        required: [true, 'Product description is required'],
         minlength: [20, 'Too short dish description']
     },
     images: [{
@@ -66,22 +66,23 @@ const DishSchema = new Schema<IDish>({
     },
     soldOut: Boolean
 },
-{
-    timestamps: true,
-    toJSON: { virtuals: true }, 
-    toObject: { virtuals: true }
-})
+    {
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
+    })
 
 
-DishSchema.pre<IDish>("validate", async function (this: IDish, next: NextFunction) {
+DishSchema.pre<IDish>("validate", async function (this: IDish, next) {
     try {
-      const slug = slugify(this.name, { lower: true, strict: true });
-      this.slug = slug;
-      next();
+        const slug = slugify(this.name, { lower: true, strict: true });
+        this.slug = slug;
+        next();
     } catch (error) {
-      next(error);
+        // next(error);
+        console.log(error);
     }
-  });
+});
 
 const Dish = model<IDish>("Dish", DishSchema);
 
