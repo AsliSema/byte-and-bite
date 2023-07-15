@@ -1,34 +1,33 @@
-// Import the necessary modules
 import mongoose, { Document, Schema } from 'mongoose';
+import bcrypt from "bcrypt";
 
-// Define the user schema
 export interface IUser extends Document {
   firstname: string;
   lastname: string;
   email: string;
   phone: string;
-  profileImage: string;
+  profileImage?: string;
   password: string;
   role?: 'admin' | 'cook' | 'customer';
   isActive?: boolean;
   address: Address;
 }
 
-interface Address {
+export interface Address {
   city: string;
-  district: string;
-  neighborhood: string;
-  streetAddress: string;
+  district?: string;
+  neighborhood?: string;
+  streetAddress?: string;
 }
 
-const userSchema= new Schema<IUser>({
+const userSchema = new Schema<IUser>({
   firstname: {
     type: String,
-    required: [true,'First name is required']
+    required: [true, 'First name is required']
   },
   lastname: {
     type: String,
-    required: [true,'Last name is required']
+    required: [true, 'Last name is required']
   },
   email: {
     type: String,
@@ -39,14 +38,9 @@ const userSchema= new Schema<IUser>({
   phone: {
     type: String,
     required: [true, 'Phone number is required'],
-    validate: {
-      validator: (value: string) => /^\d{10}$/.test(value),
-      message: 'Invalid phone number format'
-    }
   },
   profileImage: {
     type: String,
-    required: [true, 'Profile image is required']
   },
   password: {
     type: String,
@@ -69,20 +63,29 @@ const userSchema= new Schema<IUser>({
     },
     district: {
       type: String,
-      required: [true, 'District is required']
     },
     neighborhood: {
       type: String,
-      required: [true, 'Neighborhood is required']
     },
     streetAddress: {
       type: String,
-      required: [true, 'Street address is required'],
     },
   }
 },
-      { timestamps: true }
+  { timestamps: true }
 );
+
+
+/**
+ * Runs before the model saves and hecks to see if password has been
+ * modified and hashes the password before saving to database
+ */
+userSchema.pre("save", async function (this: IUser, next) {
+  if (!this.isModified("password")) next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
 
 // Create the user model
 const User = mongoose.model<IUser>('User', userSchema);
