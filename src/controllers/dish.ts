@@ -10,7 +10,7 @@ import { StatusCodes } from "http-status-codes";
     access: puplic
 */
 
-export const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
+const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
     const pageSize = Number(req.query.pageSize) || 10;
     const page = Number(req.query.pageNumber) || 1;
     const count = await Dish.countDocuments();
@@ -25,7 +25,7 @@ export const getAllDishes = asyncHandler(async (req: Request, res: Response) => 
      route: '/api/dish/:id' 
      access: public 
 */
-export const getDishById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+const getDishById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const dishId = req.params.id;
     const dish = await Dish.findById(dishId);
     if (!dish) {
@@ -68,6 +68,60 @@ const createDish = asyncHandler(async (req: Request, res: Response, next: NextFu
 
 });
 
+
+/**
+ * Update a dish by ID
+ * @route PUT /api/dish/:id
+ * @access Private/Cook
+ */
+const updateDish = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const dishId = req.params.id;
+    const { name, review, description, images, quantity, price, category, specificAllergies, slug } = req.body as IDish;
+
+    const updatedDish = await Dish.findByIdAndUpdate(dishId, {
+        name,
+        review,
+        description,
+        images,
+        quantity,
+        price,
+        category,
+        specificAllergies,
+        slug
+    }, { new: true });
+
+    if (updatedDish) {
+        res.status(StatusCodes.OK).json({
+            updatedDish
+        });
+    } else {
+        return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"));
+    }
+});
+
+/**
+ * Delete a dish by ID
+ * @route DELETE /api/dish/:id
+ * @access Private/Admin,Cook
+ */
+const deleteDish = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const dishId = req.params.id;
+
+    const deletedDish = await Dish.findByIdAndDelete(dishId);
+
+    if (deletedDish) {
+        res.status(StatusCodes.OK).json({
+            deletedDish
+        });
+    } else {
+        return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"));
+    }
+});
+
 export {
-    createDish
-}
+    createDish,
+    getAllDishes,
+    getDishById,
+    updateDish,
+    deleteDish
+};
