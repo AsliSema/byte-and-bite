@@ -18,30 +18,6 @@ export const getAllDishes = asyncHandler(async (req: Request, res: Response) => 
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
-<<<<<<< Updated upstream
-/* Controller for getting all dishes 
-    route: '/api/dish'
-    access: puplic
-*/
-
-export const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
-  const allDishes = await Dish.find({});
-  res.json(allDishes);
-});
-
-// Controller for getting a dish by ID
-export const getDishById = asyncHandler(async (req: Request, res: Response) => {
-  const dishId = req.params.id;
-  const dish = await Dish.findById(dishId);
-  if (!dish) {
-    res.status(404).json({ message: 'Dish not found' });
-  } else {
-    res.json(dish);
-  }
-});
-
-
-=======
     res.json({ Dishes, page, pages: Math.ceil(count / pageSize) });
 });
   
@@ -59,7 +35,6 @@ export const getDishById = asyncHandler(async (req: Request, res: Response, next
     res.status(StatusCodes.OK).json(dish);
 
   });
->>>>>>> Stashed changes
 
 /**
  * Create a new dish 
