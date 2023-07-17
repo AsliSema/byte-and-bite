@@ -4,10 +4,13 @@ import User from "../models/user";
 import asyncHandler from "express-async-handler";
 import { config } from "../config/config";
 import { ApiError } from "../utils/apiError";
+import { StatusCodes } from "http-status-codes";
+
 
 interface Decoded extends JwtPayload {
     id: string;
 }
+
 
 /**
  * Middleware used to protect routes from unauthorized users
@@ -48,4 +51,26 @@ const protect = asyncHandler(
     }
 );
 
-export { protect };
+
+const allowedTo = (roles: ('admin' | 'cook' | 'customer')[]) => asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userRole = req.user?.role as ('admin' | 'cook' | 'customer');
+      console.log(userRole)
+      if (!roles.includes(userRole)) {
+        return next(
+            new ApiError( 
+              StatusCodes.FORBIDDEN,
+              'You are not authorized to do this.'
+            )
+        );
+      }
+      next();
+    }
+);
+
+
+
+
+
+
+export { protect, allowedTo };

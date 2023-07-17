@@ -13,6 +13,8 @@ export interface IDish extends Document {
     specificAllergies: string[];
     soldOut?: boolean;
     slug?: string;
+    ratingsAverage?: number;
+    ratingsQuantity?: number
 }
 
 const DishSchema = new Schema<IDish>({
@@ -64,7 +66,20 @@ const DishSchema = new Schema<IDish>({
         type: String,
         unique: true
     },
-    soldOut: Boolean
+    soldOut: {
+        type: Boolean,
+        default: false
+    },
+    ratingsAverage: {
+        type: Number, 
+        min: [1, 'Rating must be equal or greater than 1'], 
+        max: [5, 'Rating must be equal or less than 5'], 
+        default: 0,
+    },
+    ratingsQuantity: {
+        type: Number, 
+        default: 0,
+    },
 },
     {
         timestamps: true,
@@ -87,5 +102,6 @@ DishSchema.pre<IDish>("validate", async function (this: IDish, next) {
 const Dish = model<IDish>("Dish", DishSchema);
 
 export default Dish;
+
 
 
