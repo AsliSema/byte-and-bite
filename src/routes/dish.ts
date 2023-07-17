@@ -1,20 +1,20 @@
 import express from "express";
-import { createDish, updateDish, deleteDish } from '../controllers/dish';
+import { createDish, getAllDishes, getDishById, updateDish, deleteDish } from '../controllers/dish';
 import { protect, allowedTo } from "../middlewares/authMiddleware";
-
+const { createDishValidator, getDishValidator,updateDishValidator, deleteDishValidator } = require('../utils/validators/dishValidator');
 
 
 
 const router = express.Router();
+router
+  .route('/')
+  .post(protect, allowedTo(['cook']), createDishValidator, createDish)
+  .get(getAllDishes)
 
-// Create a new dish
-router.route("/").post(protect, allowedTo(["cook"]), createDish)
+router
+    .route('/:id')
+    .get(getDishValidator, getDishById)
+    .put(protect, allowedTo(["cook"]),updateDishValidator, updateDish)
+    .delete(protect, allowedTo(["admin", "cook"]), deleteDishValidator, deleteDish);
 
-// Update a dish by ID (access: cook)
-router.route("/:id").put(protect, allowedTo(["cook"]), updateDish);
-
-// Delete a dish by ID (access: admin or cook)
-router.route("/:id").delete(protect, allowedTo(["admin", "cook"]), deleteDish);
-
-        
 export default router;

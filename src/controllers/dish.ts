@@ -5,8 +5,36 @@ import Dish, {IDish} from "../models/dish";
 import { Types } from "mongoose";
 import { StatusCodes } from "http-status-codes";
 
+/* Controller for getting all dishes 
+    route: '/api/dish'
+    access: puplic
+*/
 
+const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
+    const pageSize = Number(req.query.pageSize) || 10;
+    const page = Number(req.query.pageNumber) || 1;
+    const count = await Dish.countDocuments();
+    const Dishes = await Dish.find()
+        .limit(pageSize)
+        .skip(pageSize * (page - 1));
 
+    res.json({ Dishes, page, pages: Math.ceil(count / pageSize) });
+});
+  
+/* Controller for getting a dish by ID
+     route: '/api/dish/:id' 
+     access: public 
+*/
+const getDishById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const dishId = req.params.id;
+    const dish = await Dish.findById(dishId);
+    if (!dish) {
+      return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"))
+    }
+
+    res.status(StatusCodes.OK).json(dish);
+
+  });
 
 /**
  * Create a new dish 
@@ -48,7 +76,7 @@ const createDish = asyncHandler(async (req: Request, res: Response, next: NextFu
  */
 const updateDish = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const dishId = req.params.id;
-    const { name, review, description, images, quantity, price, category, specificAllergies } = req.body as IDish;
+    const { name, review, description, images, quantity, price, category, specificAllergies, slug } = req.body as IDish;
 
     const updatedDish = await Dish.findByIdAndUpdate(dishId, {
         name,
@@ -58,7 +86,8 @@ const updateDish = asyncHandler(async (req: Request, res: Response, next: NextFu
         quantity,
         price,
         category,
-        specificAllergies
+        specificAllergies,
+        slug
     }, { new: true });
 
     if (updatedDish) {
@@ -91,6 +120,8 @@ const deleteDish = asyncHandler(async (req: Request, res: Response, next: NextFu
 
 export {
     createDish,
+    getAllDishes,
+    getDishById,
     updateDish,
     deleteDish
 };
