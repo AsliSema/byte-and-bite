@@ -40,9 +40,6 @@ exports.createDishValidator = [
   check('images')
     .isArray({ min: 1 })
     .withMessage('images should be array of string with at least one image.'),
-  check('specificAllergies')
-    .isArray()
-    .withMessage('Must be a array of strings'),
 
   check('ratingsAverage')
     .optional()
