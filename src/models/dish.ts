@@ -72,9 +72,9 @@ const DishSchema = new Schema<IDish>({
     },
     ratingsAverage: {
         type: Number, 
-        min: [1, 'Rating must be equal or greater than 1'], 
+        min: [0, 'Rating must be equal or greater than 1'], 
         max: [5, 'Rating must be equal or less than 5'], 
-        default: 0,
+        default: 0
     },
     ratingsQuantity: {
         type: Number, 
