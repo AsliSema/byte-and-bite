@@ -3,7 +3,8 @@ import { ApiError } from './utils/apiError';
 import { config } from './config/config';
 import { errorHandlerMiddleware } from './utils/globalErrorHandler';
 import { StatusCodes } from "http-status-codes";
-import authRoutes from './routes/auth'
+import authRoutes from './routes/auth';
+import dishRoutes from './routes/dish';
 
 import connectToDatabase from './db/connection';
 import bodyParser from 'body-parser';
@@ -19,6 +20,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use("/api/users/", authRoutes);
+app.use("/api/dish/", dishRoutes);
+
 
 connectToDatabase();
 
