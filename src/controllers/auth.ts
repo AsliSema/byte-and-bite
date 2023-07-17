@@ -106,8 +106,25 @@ const getUserProfile = asyncHandler(async (req: Request, res: Response, next: Ne
     }
 });
 
+/**
+ * Get user profile
+ * @route GET /api/users
+ * @access Private admins only
+ */
+const getAllUsers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const pageSize = Number(req.query.pageSize) || 10;
+    const page = Number(req.query.pageNumber) || 1;
+    const count = await User.countDocuments();
+    const Users = await User.find()
+        .limit(pageSize)
+        .skip(pageSize * (page - 1));
+
+    res.json({ Users, page, pages: Math.ceil(count / pageSize) });
+});
+
 export {
     registerUser,
     signinUser,
-    getUserProfile
+    getUserProfile,
+    getAllUsers
 };

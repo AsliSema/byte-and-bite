@@ -54,23 +54,19 @@ const protect = asyncHandler(
 
 const allowedTo = (roles: ('admin' | 'cook' | 'customer')[]) => asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userRole = req.user?.role as ('admin' | 'cook' | 'customer');
-      console.log(userRole)
-      if (!roles.includes(userRole)) {
-        return next(
-            new ApiError( 
-              StatusCodes.FORBIDDEN,
-              'You are not authorized to do this.'
-            )
-        );
-      }
-      next();
+        const userRole = req.user?.role as ('admin' | 'cook' | 'customer');
+        console.log(userRole)
+        if (!roles.includes(userRole)) {
+            return next(
+                new ApiError(
+                    StatusCodes.FORBIDDEN,
+                    'You are not authorized to do this.'
+                )
+            );
+        }
+        next();
     }
 );
-
-
-
-
 
 
 export { protect, allowedTo };
