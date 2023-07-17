@@ -11,11 +11,6 @@ interface Decoded extends JwtPayload {
     id: string;
 }
 
-enum Role {
-    "admin",
-    "cook",
-    "customer"
-  }
 
 /**
  * Middleware used to protect routes from unauthorized users
