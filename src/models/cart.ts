@@ -4,7 +4,7 @@ export interface ICart extends Document {
   cartItems: Array<{ product: Types.ObjectId; quantity: number }>;
   totalCartPrice: number;
   user: Types.ObjectId;
-  cookID: string;
+  cookID: string | null;
 }
 
 const cartSchema = new Schema<ICart>(

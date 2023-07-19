@@ -75,8 +75,15 @@ const addDishToCart = asyncHandler(async (req: Request, res: Response, next: Nex
                 dishInCart.quantity += quantity;
             }
         }
-        else if (cart.cookID === dish.cook.toString()) {
-            cart.cartItems.push({ product: dishID, quantity})
+        else if (cart.cookID === dish.cook.toString() || cart.cookID === null) {
+            //We also need to checkQuantity inside here
+            if (checkQuantity(req.body.quantity, dish.quantity ) === qtyState.reqQty_bigger) {
+                cart.cartItems.push({ product: dishID, quantity: dish.quantity})
+                cart.cookID = dish.cook.toString()
+            }else{
+                cart.cartItems.push({ product: dishID, quantity})
+                cart.cookID = dish.cook.toString()
+            }
         }else{
             return next(new ApiError(StatusCodes.NOT_ACCEPTABLE, `You can not add the dishes from different cooks `))
         }
