@@ -100,6 +100,49 @@ const addDishToCart = asyncHandler(async (req: Request, res: Response, next: Nex
     })
 })
 
+
+
+/**
+ * Delete dish inside the cart items
+ * @route DELETE /api/cart/:dishID
+ * @access Private/customer
+ */
+const deleteDishFromCartItems = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const cart = await Cart.findOne({ user: req.user?._id })
+    const dish = await Dish.findById(req.params.dishID)
+
+    if (!dish) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, `Dish is not found!`))
+    }
+    if (!cart) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, `Cart is not found!`))
+    }
+
+    const dishInCart = cart.cartItems.find(item => item.product.toString() === req.params.dishID);
+
+    if (dishInCart && dishInCart.quantity === 1) {
+        const indexOfDish = cart.cartItems.findIndex(item => item.product.toString() === req.params.dishID)
+        cart.cartItems.splice(indexOfDish, 1)
+        cart.totalCartPrice = cart.totalCartPrice - dish.price
+        if (cart.cartItems.length === 0) {
+            cart.totalCartPrice = 0
+            cart.cookID = null
+        }
+    } else if (dishInCart && dishInCart.quantity > 1) {
+        dishInCart.quantity -= 1
+        cart.totalCartPrice = cart.totalCartPrice - dish.price
+    } else if (!dishInCart) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, `Dish is not found inside the cart!`))
+    }
+
+    await cart.save()
+    res.status(StatusCodes.OK).send({
+        data: cart
+    })
+})
+
+
 export {
-    addDishToCart
+    addDishToCart,
+    deleteDishFromCartItems
 }
