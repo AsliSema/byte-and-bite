@@ -118,10 +118,58 @@ const deleteDish = asyncHandler(async (req: Request, res: Response, next: NextFu
     }
 });
 
+
+/**
+ * Update a dish by ID as an admin
+ * @route PUT /api/admin/dishes/:id
+ * @access Private/Admin
+ */
+const updateDishByAdmin = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const dishId = req.params.id;
+      const {
+        name,
+        review,
+        description,
+        images,
+        quantity,
+        price,
+        category,
+        specificAllergies,
+        slug,
+      } = req.body as IDish;
+      const updatedDish = await Dish.findByIdAndUpdate(
+        dishId,
+        {
+          name,
+          review,
+          description,
+          images,
+          quantity,
+          price,
+          category,
+          specificAllergies,
+          slug,
+        },
+        { new: true }
+      );
+  
+      if (updatedDish) {
+        res.status(StatusCodes.OK).json({
+          updatedDish,
+        });
+      } else {
+        return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"));
+      }
+    }
+  );
+      
+
 export {
     createDish,
     getAllDishes,
     getDishById,
     updateDish,
-    deleteDish
+    deleteDish,
+    updateDishByAdmin
 };
