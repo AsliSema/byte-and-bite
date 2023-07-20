@@ -118,10 +118,34 @@ const deleteDish = asyncHandler(async (req: Request, res: Response, next: NextFu
     }
 });
 
+
+/**
+ * Delete a dish by ID as an admin
+ * @route DELETE /api/admin/dishes/:id
+ * @access Private/Admin
+ */
+const deleteDishByAdmin = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const dishId = req.params.id;
+
+      const deletedDish = await Dish.findByIdAndDelete(dishId);
+  
+      if (deletedDish) {
+        res.status(StatusCodes.OK).json({
+          deletedDish,
+        });
+      } else {
+        return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"));
+      }
+    }
+  );
+  
+
 export {
     createDish,
     getAllDishes,
     getDishById,
     updateDish,
-    deleteDish
+    deleteDish,
+    deleteDishByAdmin, 
 };
