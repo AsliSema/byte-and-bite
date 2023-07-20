@@ -6,6 +6,7 @@ import { StatusCodes } from "http-status-codes";
 import authRoutes from './routes/auth';
 import dishRoutes from './routes/dish';
 import cartRoutes from "./routes/cart";
+import adminRoutes from "./routes/admin";
 
 import connectToDatabase from './db/connection';
 import bodyParser from 'body-parser';
@@ -23,7 +24,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/api/users/", authRoutes);
 app.use("/api/dish/", dishRoutes);
 app.use("/api/cart/", cartRoutes);
-
+app.use("/api/admin/", adminRoutes);
 
 connectToDatabase();
 
