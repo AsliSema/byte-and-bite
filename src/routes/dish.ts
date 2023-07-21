@@ -1,9 +1,7 @@
 import express from "express";
 import { createDish, getAllDishes, getDishById, updateDish, deleteDish } from '../controllers/dish';
 import { protect, allowedTo } from "../middlewares/authMiddleware";
-const { createDishValidator, getDishValidator,updateDishValidator, deleteDishValidator } = require('../utils/validators/dishValidator');
-
-
+import { createDishValidator, getDishValidator,updateDishValidator, deleteDishValidator } from '../utils/validators/dishValidator';
 
 const router = express.Router();
 router
