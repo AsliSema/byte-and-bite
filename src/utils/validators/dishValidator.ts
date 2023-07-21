@@ -4,7 +4,7 @@ const slugify = require('slugify');
 const { check, body } = require('express-validator');
 const validatorMiddleware = require('../../middlewares/validatorMiddleware');
 
-createDishValidator = [
+const createDishValidator = [
   check('name').notEmpty().withMessage('Dish name is required'),
 
   check('description')
@@ -57,12 +57,12 @@ createDishValidator = [
   validatorMiddleware,
 ];
 
-getDishValidator = [
+const getDishValidator = [
   check('id').isMongoId().withMessage('Invalid ID formate'),
   validatorMiddleware,
 ];
 
-updateDishValidator = [
+const updateDishValidator = [
   check('id').isMongoId().withMessage('Invalid ID format'),
   body('name')
     .optional()
@@ -73,9 +73,9 @@ updateDishValidator = [
   validatorMiddleware,
 ];
 
-deleteDishValidator = [
+const deleteDishValidator = [
   check('id').isMongoId().withMessage('Invalid ID format'),
   validatorMiddleware,
 ];
 
-export{ createDishValidator, getDishValidator,updateDishValidator, deleteDishValidator }
+export { createDishValidator, getDishValidator, updateDishValidator, deleteDishValidator }
