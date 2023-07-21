@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "../types/express";
 import asyncHandler from "express-async-handler";
 import { ApiError } from "../utils/apiError";
-import Dish, {IDish} from "../models/dish";
+import Dish, { IDish } from "../models/dish";
 import { Types } from "mongoose";
 import { StatusCodes } from "http-status-codes";
 
@@ -20,7 +20,7 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
 
     res.json({ Dishes, page, pages: Math.ceil(count / pageSize) });
 });
-  
+
 /* Controller for getting a dish by ID
      route: '/api/dish/:id' 
      access: public 
@@ -29,12 +29,12 @@ const getDishById = asyncHandler(async (req: Request, res: Response, next: NextF
     const dishId = req.params.id;
     const dish = await Dish.findById(dishId);
     if (!dish) {
-      return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"))
+        return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"))
     }
 
     res.status(StatusCodes.OK).json(dish);
 
-  });
+});
 
 /**
  * Create a new dish 
@@ -42,26 +42,24 @@ const getDishById = asyncHandler(async (req: Request, res: Response, next: NextF
  * @access Private/Cook, Private/admin
  */
 const createDish = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { name, cook, review, description, images, quantity, price, category, specificAllergies} = req.body as IDish;
+    const { name, cook, review, description, images, quantity, price, category, specificAllergies } = req.body as IDish;
 
     let cookID;
-    if(req.user?.role === "admin"){
+    if (req.user?.role === "admin") {
         cookID = req.body.cook
-    }else{
+    } else {
         cookID = req.user?._id
-    } 
-
-    console.log(req.user)
+    }
 
     const newDish = await Dish.create({
-        name, 
-        cook: cookID, 
-        review, 
-        description, 
-        images, 
-        quantity, 
-        price, 
-        category, 
+        name,
+        cook: cookID,
+        review,
+        description,
+        images,
+        quantity,
+        price,
+        category,
         specificAllergies
     });
 

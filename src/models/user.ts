@@ -63,12 +63,15 @@ const userSchema = new Schema<IUser>({
     },
     district: {
       type: String,
+      required: [true, 'district is required']
     },
     neighborhood: {
       type: String,
+      required: [true, 'neighborhood is required']
     },
     streetAddress: {
       type: String,
+      required: [true, 'streetAddress is required']
     },
   }
 },

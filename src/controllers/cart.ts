@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from '../types/express';
 import { StatusCodes } from 'http-status-codes';
 import asyncHandler from 'express-async-handler';
 import { ApiError } from '../utils/apiError';
-import Cart from '../models/cart';
+import Cart, { ICart } from '../models/cart';
 import Dish from '../models/dish';
 
 export enum qtyState {
@@ -10,6 +10,20 @@ export enum qtyState {
   reqQty_bigger = 2,
   availableToAdd = 3,
 }
+
+const calculateTotalInCart = async (cart: ICart) => {
+  let totalPrice = 0;
+
+  for (const item of cart.cartItems) {
+    const currentDish = await Dish.findById(item.product);
+
+    if (currentDish) {
+      totalPrice += item.quantity * currentDish.price;
+    }
+  }
+
+  return totalPrice;
+};
 
 const checkQuantity = (
   requestedQuantity: number,
@@ -24,13 +38,9 @@ const checkQuantity = (
   return qtyState.availableToAdd;
 };
 
-// const calculateTotalInCart = (cart: ,dish) => {
-//     let totalPrice = 0
-//     cart.cartItems.forEach(item => {
-//         totalPrice += (item.quantity*dish.price);
-//     })
-//     cart.totalCartPrice = totalPrice;
-// }
+// ADD dish to the cart items if it exists, otherwise create a new cart.
+// @route POST /api/cart
+// @access Private/customer
 
 const addDishToCart = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -109,11 +119,8 @@ const addDishToCart = asyncHandler(
         );
       }
     }
-    let totalPrice = 0;
-    cart.cartItems.forEach((item) => {
-      totalPrice += item.quantity * dish.price;
-    });
-    cart.totalCartPrice = totalPrice;
+
+    cart.totalCartPrice = await calculateTotalInCart(cart);
 
     await cart.save();
     res.status(StatusCodes.OK).json({
@@ -122,11 +129,12 @@ const addDishToCart = asyncHandler(
   }
 );
 
-/**
- * Delete dish inside the cart items
- * @route DELETE /api/cart/:dishID
- * @access Private/customer
- */
+
+// @desc  Delete dish inside the cart items
+// @route DELETE /api/cart/:dishID
+// @access Private/customer
+
+
 const deleteDishFromCartItems = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const cart = await Cart.findOne({ user: req.user?._id });
@@ -210,6 +218,7 @@ const clearCart = asyncHandler(
 // @desc    Update specific cart item quantity
 // @route   PUT /api/cart/:dishID
 // @access  Private/Customer
+
 const updateCartItemQuantity = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { quantity } = req.body;
@@ -253,13 +262,7 @@ const updateCartItemQuantity = asyncHandler(
       );
     }
 
-    let totalPrice = 0;
-    cart.cartItems.forEach((item) => {
-      totalPrice += item.quantity * dish.price;
-    });
-    cart.totalCartPrice = totalPrice;
-
-    cart.totalCartPrice = totalPrice;
+    cart.totalCartPrice = await calculateTotalInCart(cart);
 
     await cart.save();
 

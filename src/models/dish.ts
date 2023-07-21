@@ -71,13 +71,13 @@ const DishSchema = new Schema<IDish>({
         default: false
     },
     ratingsAverage: {
-        type: Number, 
-        min: [0, 'Rating must be equal or greater than 0'], 
-        max: [5, 'Rating must be equal or less than 5'], 
+        type: Number,
+        min: [0, 'Rating must be equal or greater than 0'],
+        max: [5, 'Rating must be equal or less than 5'],
         default: 0,
     },
     ratingsQuantity: {
-        type: Number, 
+        type: Number,
         default: 0,
     },
 },
@@ -95,7 +95,6 @@ DishSchema.pre<IDish>("validate", async function (this: IDish, next) {
         next();
     } catch (error) {
         // next(error);
-        console.log(error);
     }
 });
 
