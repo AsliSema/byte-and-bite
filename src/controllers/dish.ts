@@ -38,17 +38,24 @@ const getDishById = asyncHandler(async (req: Request, res: Response, next: NextF
 
 /**
  * Create a new dish 
- * @route POST /api/dishes
- * @access Private/Cook
+ * @route POST /api/dishes, POST /api/admin/dishes
+ * @access Private/Cook, Private/admin
  */
 const createDish = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { name, cook, review, description, images, quantity, price, category, specificAllergies} = req.body as IDish;
+
+    let cookID;
+    if(req.user?.role === "admin"){
+        cookID = req.body.cook
+    }else{
+        cookID = req.user?._id
+    } 
 
     console.log(req.user)
 
     const newDish = await Dish.create({
         name, 
-        cook: req.user?._id, 
+        cook: cookID, 
         review, 
         description, 
         images, 
