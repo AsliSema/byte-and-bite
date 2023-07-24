@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "../types/express";
 import asyncHandler from "express-async-handler";
-import User, { Address } from "../models/user";
+import User, { Address, IUser } from "../models/user";
 import generateToken from '../utils/generateToken';
 import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../utils/apiError";
@@ -122,9 +122,58 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response, next: NextF
     res.json({ Users, page, pages: Math.ceil(count / pageSize) });
 });
 
+
+/**
+ * Update User 
+ * @route POST /api/admin/users/:userID
+ * @access Private/admin
+ */
+const updateUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { firstname, lastname, email, phone, profileImage, password, role, isActive, address} = req.body as IUser
+
+    const user = await User.findById(req.params.userID);
+
+    if (!user) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, "User not found"))
+    }
+    if (req.user?.role !== "admin" && (req.user?._id.toString() !== user._id.toString())) {
+            return next(new ApiError(StatusCodes.UNAUTHORIZED, "You are not allowed to do this!"))
+    }
+    if(req.user?.role === "admin"){
+        user.isActive = isActive || user.isActive; 
+        user.role = role || user.role; 
+    }
+
+    user.firstname = firstname || user.firstname;
+    user.lastname = lastname || user.lastname;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+    user.profileImage = profileImage || user.profileImage;
+    user.password = password || user.password;
+    user.role = user.role; 
+    user.isActive = user.isActive; 
+    user.address = address || user.address;
+
+    const updatedUser = await user.save();
+
+    res.status(StatusCodes.OK).json({
+        _id: updatedUser._id,
+        firstname: updatedUser.firstname,
+        lastname: updatedUser.lastname,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        profileImage: updatedUser.profileImage,
+        password: updatedUser.password,
+        role: updatedUser.role,
+        isActive: updatedUser.isActive,
+        address: updatedUser.address
+    });
+});
+
 export {
     registerUser,
     signinUser,
     getUserProfile,
-    getAllUsers
+    getAllUsers,
+    updateUser
 };
