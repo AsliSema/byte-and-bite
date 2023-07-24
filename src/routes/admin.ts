@@ -1,5 +1,5 @@
 import express from 'express';
-import { updateUser } from '../controllers/admin';
+import { updateUser } from '../controllers/auth';
 import { createDish, deleteDish, updateDish } from '../controllers/dish';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 import { getAllOrders, getOrderById, updateOrderStatus } from '../controllers/order';
