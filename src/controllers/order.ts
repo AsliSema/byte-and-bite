@@ -149,7 +149,7 @@ const updateOrderStatus = asyncHandler(async (req: Request, res: Response, next:
         return next(new ApiError(StatusCodes.NOT_FOUND, `There is no order associated with this id ${req.params.orderID}`));
     }
 
-    if (order.cookId.toString() !== req.user?._id.toString()) {
+    if (req.user?.role !== 'admin' && order.cookId.toString() !== req.user?._id.toString()) {
         return next(new ApiError(StatusCodes.NOT_FOUND, `Not allowed to update this order`));
     }
     order.isDelivered = req.body.isDelivered;

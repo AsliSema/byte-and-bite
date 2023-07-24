@@ -125,11 +125,11 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response, next: NextF
 
 /**
  * Update User 
- * @route POST /api/admin/users/:userID
- * @access Private/admin
+ * @route POST /api/admin/users/:userID & /api/users/:userID
+ * @access Private (admin) or (customer/cook who own this profile)
  */
 const updateUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { firstname, lastname, email, phone, profileImage, password, role, isActive, address} = req.body as IUser
+    const { firstname, lastname, email, phone, profileImage, password, role, isActive, address } = req.body as IUser
 
     const user = await User.findById(req.params.userID);
 
@@ -137,11 +137,11 @@ const updateUser = asyncHandler(async (req: Request, res: Response, next: NextFu
         return next(new ApiError(StatusCodes.BAD_REQUEST, "User not found"))
     }
     if (req.user?.role !== "admin" && (req.user?._id.toString() !== user._id.toString())) {
-            return next(new ApiError(StatusCodes.UNAUTHORIZED, "You are not allowed to do this!"))
+        return next(new ApiError(StatusCodes.UNAUTHORIZED, "You are not allowed to do this!"))
     }
-    if(req.user?.role === "admin"){
-        user.isActive = isActive || user.isActive; 
-        user.role = role || user.role; 
+    if (req.user?.role === "admin") {
+        user.isActive = isActive !== undefined ? isActive : user.isActive;
+        user.role = role || user.role;
     }
 
     user.firstname = firstname || user.firstname;
@@ -150,8 +150,6 @@ const updateUser = asyncHandler(async (req: Request, res: Response, next: NextFu
     user.phone = phone || user.phone;
     user.profileImage = profileImage || user.profileImage;
     user.password = password || user.password;
-    user.role = user.role; 
-    user.isActive = user.isActive; 
     user.address = address || user.address;
 
     const updatedUser = await user.save();
