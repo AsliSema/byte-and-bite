@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllUsers, getUserProfile, registerUser, signinUser } from '../controllers/auth';
+import { getAllUsers, getUserProfile, registerUser, signinUser, updateUser } from '../controllers/auth';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 const {
   signupValidator,
@@ -12,5 +12,6 @@ router.route('/signup').post(signupValidator, registerUser);
 router.route('/signin').post(signinValidator, signinUser);
 router.route('/profile').get(protect, getUserProfile);
 router.route("/").get(protect, allowedTo(["admin"]), getAllUsers);
+router.route("/:userID").put(protect, allowedTo(["customer", "cook"]), updateUser);
 
 export default router;
