@@ -2,8 +2,26 @@ import { NextFunction, Request, Response } from "../types/express";
 import asyncHandler from "express-async-handler";
 import { ApiError } from "../utils/apiError";
 import Dish, { IDish } from "../models/dish";
-import { Types } from "mongoose";
+import Order from "../models/order";
+import Review, { IReview } from "../models/review";
 import { StatusCodes } from "http-status-codes";
+
+
+const updateDishReviewsInfo = async (dishID: string) => {
+    const dish = await Dish.findById(dishID);
+    const dishReviews = await Review.find({ dish: dish?.id });
+    const ratingsQuantity = dishReviews.length;
+    let totalRating = 0;
+    for (const review of dishReviews) {
+        totalRating += review.rating;
+    }
+    const ratingsAverage = totalRating / ratingsQuantity;
+    if (dish) {
+        dish.ratingsAverage = ratingsAverage;
+        dish.ratingsQuantity = ratingsQuantity;
+        dish.save();
+    }
+}
 
 /* Controller for getting all dishes 
     route: '/api/dish'
@@ -27,13 +45,13 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
 */
 const getDishById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const dishId = req.params.id;
-    const dish = await Dish.findById(dishId);
-    if (!dish) {
+    const dishToFind = await Dish.findById(dishId);
+    if (!dishToFind) {
         return next(new ApiError(StatusCodes.NOT_FOUND, "Dish not found"))
     }
-
-    res.status(StatusCodes.OK).json(dish);
-
+    const dishReviews = await Review.find({ dish: dishId });
+    const dish = { ...dishToFind.toObject(), reviews: dishReviews };
+    res.status(StatusCodes.OK).json({ dish: dish });
 });
 
 /**
@@ -123,10 +141,110 @@ const deleteDish = asyncHandler(async (req: Request, res: Response, next: NextFu
     }
 });
 
+/**
+ * Create a review for a dish
+ * @route POST /api/dish/review/:dishID
+ * @access Private Customer
+ */
+const createReview = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    // get user orders
+    const orders = await Order.find({ user: req.user?._id });
+    // check if user has already purchased this dish
+    let canReview = false;
+    for (const order of orders) {
+        for (const dish of order.orderItems) {
+            if (dish.product.toString() === req.params.dishID && order.isDelivered === true) {
+                canReview = true;
+                break;
+            }
+        }
+        if (canReview) {
+            break;
+        }
+    }
+    if (!canReview) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, 'You must buy this dish first!'))
+    }
+    const { comment, rating } = req.body as IReview;
+
+    const newReview = await Review.create({
+        user: req.user?._id,
+        dish: req.params.dishID,
+        comment,
+        rating
+    });
+
+    updateDishReviewsInfo(req.params.dishID);
+    if (!newReview) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, 'Invalid review data!'))
+    }
+    res.status(StatusCodes.CREATED).json({ newReview });
+});
+
+
+const deleteReview = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    let deletedReview;
+    if (req.user?.role === 'admin') {
+        deletedReview = await Review.findOneAndDelete({ _id: req.params.reviewID });
+    }
+    else {
+        deletedReview = await Review.findOneAndDelete({
+            $and: [
+                { user: req.user?._id },
+                { _id: req.params.reviewID },
+            ],
+        });
+    }
+
+    if (!deletedReview) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, 'You can not delete this review!'))
+    }
+
+    updateDishReviewsInfo(deletedReview.dish.toString());
+
+    res.status(StatusCodes.OK).json({ deletedReview });
+})
+
+
+const updateReview = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { comment, rating } = req.body;
+    if ((rating !== undefined) && (rating < 1 || rating > 5 || typeof rating !== 'number')) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, 'Rating must be between 1 and 5!'))
+    }
+
+    if ((comment !== undefined) && (typeof comment !== 'string' || comment === '' || comment === null)) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, 'Comment is required!'))
+    }
+    const updatedReview = await Review.findOneAndUpdate({
+        $and: [
+            { user: req.user?._id },
+            { _id: req.params.reviewID },
+        ],
+    }, {
+        rating,
+        comment
+    }, {
+        new: true
+    });
+
+    if (!updatedReview) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, 'You can not update this review!'))
+    }
+
+    updateDishReviewsInfo(updatedReview.dish.toString());
+
+    res.status(StatusCodes.OK).json({ updatedReview });
+});
+
+
 export {
     createDish,
     getAllDishes,
     getDishById,
     updateDish,
-    deleteDish
+    deleteDish,
+    createReview,
+    deleteReview,
+    updateReview
 };
