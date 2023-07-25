@@ -1,6 +1,6 @@
 import express from 'express';
 import { updateUser } from '../controllers/auth';
-import { createDish, deleteDish, updateDish } from '../controllers/dish';
+import { createDish, deleteDish, deleteReview, updateDish } from '../controllers/dish';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 import { getAllOrders, getOrderById, updateOrderStatus } from '../controllers/order';
 const {
@@ -18,6 +18,9 @@ router.route("/dishes").post(protect, allowedTo(['admin']), createDish);
 router
   .put("/dishes/:id", protect, allowedTo(["admin"]), updateDishValidator, updateDish)
   .delete("/dishes/:id", protect, allowedTo(["admin"]), deleteDishValidator, deleteDish);
+
+// Review
+router.route("/dish/review/:reviewID").delete(protect, allowedTo(['admin']), deleteReview);
 
 // Order
 router.route("/orders").get(protect, allowedTo(["admin"]), getAllOrders);
