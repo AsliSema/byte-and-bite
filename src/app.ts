@@ -12,6 +12,9 @@ import adminRoutes from "./routes/admin";
 import connectToDatabase from './db/connection';
 import bodyParser from 'body-parser';
 
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './utils/swagger';
+
 const app = express();
 
 app.use(express.json());
@@ -27,6 +30,12 @@ app.use("/api/dish/", dishRoutes);
 app.use("/api/cart/", cartRoutes);
 app.use("/api/order/", orderRoutes);
 app.use("/api/admin/", adminRoutes);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+app.get("/api/docs.json", (req: Request, res: Response) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
 
 connectToDatabase();
 
