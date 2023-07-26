@@ -1,6 +1,8 @@
 const { check } = require('express-validator');
 const validatorMiddleware = require('../../middlewares/validatorMiddleware');
 import User from '../../models/user';
+import { Request } from 'express';
+import { isCityCode, getDistrictsByCityCode, getNeighbourhoodsByCityCodeAndDistrict } from "turkey-neighbourhoods";
 
 exports.signupValidator = [
   check('firstname')
@@ -40,20 +42,47 @@ exports.signupValidator = [
     .isMobilePhone(['tr-TR'])
     .withMessage('Invalid phone number only accept Turkish phone numbers'),
 
-  /*check('role').custom((val: String) => {
-    if (val !== 'customer' && val !== 'admin' && val !== 'cook') {
-      return Promise.reject(
-        new Error('Users can be only (customers, cooks or admins)')
-      );
-    }
-    return true;
-  }),*/
-
   check('profileImg').optional(),
-  check('address.city').notEmpty().withMessage('please enter a city'),
-  check('address.district').optional(),
-  check('address.neighborhood').optional(),
-  check('address.streetAddress').optional(),
+
+  check('address.city')
+    .notEmpty().withMessage('please enter a city')
+    .custom((val: string) => {
+      const isCity = isCityCode(val);
+      if (!isCity) {
+        return Promise.reject(
+          new Error("City not found!")
+        );
+      }
+      return true
+    }),
+
+  check('address.district')
+    .notEmpty().withMessage('please enter a district')
+    .custom((val: string, { req }: { req: Request }) => {
+      const districts = getDistrictsByCityCode(req.body.address.city);
+      const isDistrict = districts.includes(val);
+      if (!isDistrict) {
+        return Promise.reject(
+          new Error("District not found!")
+        );
+      }
+      return true
+    }),
+
+  check('address.neighborhood')
+    .notEmpty().withMessage('please enter a district')
+    .custom((val: string, { req }: { req: Request }) => {
+      const neighbourhoods = getNeighbourhoodsByCityCodeAndDistrict(req.body.address.city, req.body.address.district);
+      const isNeighborhood = neighbourhoods.includes(val)
+      if (!isNeighborhood) {
+        return Promise.reject(
+          new Error("Neighborhood not found!")
+        );
+      }
+      return true
+    }),
+
+  check('address.addressInfo').notEmpty().withMessage('please enter a address info'),
 
   validatorMiddleware,
 ];

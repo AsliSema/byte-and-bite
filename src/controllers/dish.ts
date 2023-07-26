@@ -29,14 +29,63 @@ const updateDishReviewsInfo = async (dishID: string) => {
 */
 
 const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
-    const pageSize = Number(req.query.pageSize) || 10;
-    const page = Number(req.query.pageNumber) || 1;
-    const count = await Dish.countDocuments();
-    const Dishes = await Dish.find()
-        .limit(pageSize)
-        .skip(pageSize * (page - 1));
+    // user not logged in
+    if (!req.user) {
+        const Dishes = await Dish.find()
+            .limit(10);
 
-    res.json({ Dishes, page, pages: Math.ceil(count / pageSize) });
+        res.json({ Dishes });
+    }
+    // user logged in
+    else {
+        const pageSize = Number(req.query.pageSize) || 10;
+        const page = Number(req.query.pageNumber) || 1;
+        let count = 0;
+        let dishes;
+        if (req.user.role === 'admin') {
+            count = await Dish.find().countDocuments();
+
+            dishes = await Dish.find()
+                .limit(pageSize)
+                .skip(pageSize * (page - 1));
+
+            res.json({ dishes, count: count, page, pages: Math.ceil(count / pageSize) });
+        }
+        else if (req.user.role === 'cook') {
+            count = await Dish.find({
+                cook: req.user._id
+            }).countDocuments();
+
+            dishes = await Dish.find({
+                cook: req.user._id
+            })
+                .limit(pageSize)
+                .skip(pageSize * (page - 1));
+
+            res.json({ dishes, count: count, page, pages: Math.ceil(count / pageSize) });
+        }
+        else {
+            if (req.query.category) {
+                dishes = await Dish.find({
+                    category: req.query.category,
+                }).populate('cook', ['address'])
+            }
+            else {
+                dishes = await Dish.find().populate('cook', ['address'])
+            }
+
+            let filteredDishes = dishes.filter((dish) => {
+                const cook = Object.assign(dish.cook);
+                return (cook.address.city === req?.user?.address.city && cook.address.district === req?.user?.address.district);
+            });
+            count = filteredDishes.length;
+            filteredDishes = filteredDishes.slice(pageSize * (page - 1)).slice(0, pageSize);
+
+            res.json({ dishes: filteredDishes, count: count, page, pages: Math.ceil(count / pageSize) });
+        }
+
+    }
+
 });
 
 /* Controller for getting a dish by ID

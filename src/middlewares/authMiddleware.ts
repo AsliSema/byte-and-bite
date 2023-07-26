@@ -51,6 +51,36 @@ const protect = asyncHandler(
     }
 );
 
+const getUser = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+
+        let token;
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith('Bearer')
+        ) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+        if (!token) {
+            req.user = undefined;
+            next();
+        }
+        else {
+            const decoded = jwt.verify(token, config.jwt.secret) as Decoded;
+
+            const currentUser = await User.findById(decoded.id);
+            if (!currentUser) {
+                req.user = undefined;
+                next();
+            }
+            else {
+                req.user = currentUser;
+                next();
+            }
+
+        }
+    }
+);
 
 const allowedTo = (roles: ('admin' | 'cook' | 'customer')[]) => asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -72,4 +102,4 @@ const allowedTo = (roles: ('admin' | 'cook' | 'customer')[]) => asyncHandler(
 
 
 
-export { protect, allowedTo };
+export { protect, allowedTo, getUser };

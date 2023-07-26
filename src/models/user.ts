@@ -15,9 +15,9 @@ export interface IUser extends Document {
 
 export interface Address {
   city: string;
-  district?: string;
-  neighborhood?: string;
-  streetAddress?: string;
+  district: string;
+  neighborhood: string;
+  addressInfo: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -69,9 +69,9 @@ const userSchema = new Schema<IUser>({
       type: String,
       required: [true, 'neighborhood is required']
     },
-    streetAddress: {
+    addressInfo: {
       type: String,
-      required: [true, 'streetAddress is required']
+      required: [true, 'address info is required']
     },
   }
 },

@@ -59,7 +59,7 @@ const createOrder = asyncHandler(async (req: Request, res: Response, next: NextF
         orderItems: cart.cartItems,
         deliveryFee,
         totalOrderPrice: await calculateTotalInCart(cart) + deliveryFee,
-        deliveryAddress: `${user?.address.city}, ${user?.address.district}, ${user?.address.neighborhood}, ${user?.address.streetAddress}`
+        deliveryAddress: `${user?.address.city}, ${user?.address.district}, ${user?.address.neighborhood}, ${user?.address.addressInfo}`
     })
 
     await updateCartDishesQty(cart);
