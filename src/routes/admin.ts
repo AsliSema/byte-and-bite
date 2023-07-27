@@ -14,6 +14,30 @@ const router = express.Router();
 router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
 
 // dish
+
+
+/**
+ * @openapi
+ * '/api/admin/dishes':
+ *  get:
+ *    tags:
+ *    - Admin
+ *    summary: Get all dishes
+ *    "parameters":
+ *        [  
+ *          {  
+ *             "name":"pageSize",
+ *             "in":"query",
+ *             "description":"The dishes number that needs to be fetched in one page.",
+ *             "type":"string"
+ *          }
+ *        ] 
+ *    responses:
+ *      200:
+ *        description: Get all dishes for the admin,
+ *      403:
+ *        description: Forbidden
+ */
 router.route("/dishes")
   .get(protect, allowedTo(['admin']), getAllDishes)
   .post(protect, allowedTo(['admin']), createDish);
