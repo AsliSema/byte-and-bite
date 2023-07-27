@@ -12,7 +12,7 @@ const options: swaggerJSDoc.Options = {
             description: "This is the API application made with Express, TypeScript and documented with Swagger",
         },
         components: {
-            securitySchemas: {
+            securitySchemes: {
                 bearerAuth: {
                     type: "http",
                     scheme: "bearer",
