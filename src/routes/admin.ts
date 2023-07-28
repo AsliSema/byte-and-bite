@@ -59,7 +59,7 @@ router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
  *       type: number
  *    responses:
  *      200:
- *        description: Get all dishes for the admin,
+ *        description: Get all dishes
  *      403:
  *        description: Forbidden
  *  post:
