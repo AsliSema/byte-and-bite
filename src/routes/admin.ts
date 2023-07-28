@@ -52,15 +52,11 @@ router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
  *    tags:
  *    - Admin
  *    summary: Get all dishes
- *    "parameters":
- *        [  
- *          {  
- *             "name":"pageSize",
- *             "in":"query",
- *             "description":"The dishes number that needs to be fetched in one page.",
- *             "type":"string"
- *          }
- *        ] 
+ *    parameters:
+ *     - name: pageSize
+ *       in: query
+ *       description: The dishes number that needs to be fetched in one page
+ *       type: number
  *    responses:
  *      200:
  *        description: Get all dishes for the admin,
