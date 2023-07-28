@@ -84,6 +84,24 @@ router.route("/dishes")
  *         description: Forbidden
  *       404:
  *         description: Dish not found
+ *  delete:
+ *     tags:
+ *     - Admin
+ *     summary: Delete the dish
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The id of the dish
+ *        required: true
+ *     responses:
+ *       200:
+ *         description: Dish deleted
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Dish not found
  */
 
 router
