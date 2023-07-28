@@ -99,6 +99,12 @@ DishSchema.pre<IDish>("validate", async function (this: IDish, next) {
 });
 
 
+const Dish = model<IDish>("Dish", DishSchema);
+
+export default Dish;
+
+
+
 
 /**
  * @openapi
@@ -163,10 +169,6 @@ DishSchema.pre<IDish>("validate", async function (this: IDish, next) {
  *           type: string
  *           default: []                             
  */ 
-
-const Dish = model<IDish>("Dish", DishSchema);
-
-export default Dish;
 
 
 

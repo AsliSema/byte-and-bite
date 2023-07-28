@@ -57,9 +57,15 @@ router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
  *       in: query
  *       description: The dishes number that needs to be fetched in one page
  *       type: number
+ *     - name: pageNumber
+ *       in: query
+ *       description: The dishes page that needs to be fetched
+ *       type: number
  *    responses:
  *      200:
  *        description: Get all dishes
+ *      401:
+ *        description: Unauthorized
  *      403:
  *        description: Forbidden
  *  post:
@@ -77,6 +83,8 @@ router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
  *        description: Dish created
  *      401:
  *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  */
 router.route("/dishes")
   .get(protect, allowedTo(['admin']), getAllDishes)
@@ -150,12 +158,12 @@ router
  *     responses:
  *       200:
  *         description: Review deleted
+ *       400:
+ *         description: You can not delete this review!
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Forbidden
- *       404:
- *         description: Review not found
  */
 
 router.route("/dish/review/:reviewID").delete(protect, allowedTo(['admin']), deleteReview);

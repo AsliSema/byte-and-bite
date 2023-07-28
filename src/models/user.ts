@@ -121,7 +121,7 @@ userSchema.pre("save", async function (this: IUser, next) {
  *           default: true
  *         address:
  *           type: object
- *           default: { city: İstanbul, district: Üsküdar, neighborhood: Mimar Sinan Mah, addressInfo: Çavuşdere Caddesi No:41A İç kapı no:30}   
+ *           default: { city: "34", district: Üsküdar, neighborhood: Mimar Sinan Mah, addressInfo: Çavuşdere Caddesi No:41A İç kapı no:30}   
  */  
 
 
