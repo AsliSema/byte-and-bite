@@ -46,7 +46,7 @@ router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/CreateDishInput'
+ *            $ref: '#/components/schemas/CreateDishInputForAdmin'
  *    responses:
  *      200:
  *        description: Dish created
@@ -56,6 +56,36 @@ router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
 router.route("/dishes")
   .get(protect, allowedTo(['admin']), getAllDishes)
   .post(protect, allowedTo(['admin']), createDish);
+
+/**
+ * @openapi
+ * '/api/admin/dishes/{id}':
+ *  put:
+ *     tags:
+ *     - Admin
+ *     summary: Update the dish
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The id of the dish
+ *        required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Dish'
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Dish not found
+ */
+
 router
   .put("/dishes/:id", protect, allowedTo(["admin"]), updateDishValidator, updateDish)
   .delete("/dishes/:id", protect, allowedTo(["admin"]), deleteDishValidator, deleteDish);
