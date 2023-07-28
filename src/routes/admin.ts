@@ -1,5 +1,5 @@
 import express from 'express';
-import { updateUser } from '../controllers/auth';
+import { updateUser,getAllUsers } from '../controllers/auth';
 import { createDish, deleteDish, deleteReview, getAllDishes, updateDish } from '../controllers/dish';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 import { getAllOrders, getOrderById, updateOrderStatus } from '../controllers/order';
@@ -11,6 +11,32 @@ const {
 const router = express.Router();
 
 // User
+/**
+ * @swagger
+ * /api/admin/users/:
+ *   get:
+ *     summary: Get all users 
+ *     description: Get a list of all users. This route is accessible to admins only.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: pageSize
+ *         in: query
+ *         description: Users number that needs to be fetched in one page
+ *         type: number
+ *       - name: pageNumber
+ *         in: query
+ *         description: The users page that needs to be fetched
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Successful response with the list of users.
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden 
+ */
+router.route("/users").get(protect, allowedTo(["admin"]), getAllUsers);
 router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
 
 // dish

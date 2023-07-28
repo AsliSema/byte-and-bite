@@ -28,7 +28,7 @@ const protect = asyncHandler(
         if (!token) {
             return next(
                 new ApiError(
-                    401,
+                    StatusCodes.UNAUTHORIZED,
                     'You are not login, Please login to get access this route',
                 )
             );
@@ -40,7 +40,7 @@ const protect = asyncHandler(
         if (!currentUser) {
             return next(
                 new ApiError(
-                    401,
+                    StatusCodes.UNAUTHORIZED,
                     'The user that belong to this token does no longer exist'
                 )
             );
