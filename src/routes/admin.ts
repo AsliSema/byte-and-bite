@@ -109,6 +109,30 @@ router
   .delete("/dishes/:id", protect, allowedTo(["admin"]), deleteDishValidator, deleteDish);
 
 // Review
+
+/**
+ * @openapi
+ * '/api/admin/dish/review/{reviewID}':
+ *  delete:
+ *     tags:
+ *     - Admin
+ *     summary: Delete the review
+ *     parameters:
+ *      - name: reviewID
+ *        in: path
+ *        description: The id of the review
+ *        required: true
+ *     responses:
+ *       200:
+ *         description: Review deleted
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Review not found
+ */
+
 router.route("/dish/review/:reviewID").delete(protect, allowedTo(['admin']), deleteReview);
 
 // Order
