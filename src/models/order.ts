@@ -3,7 +3,7 @@ import mongoose, { Schema, model, Document, Types } from 'mongoose';
 export interface IOrder extends Document {
   user: Types.ObjectId;
   cookId: string;
-  orderItems: Array<{ product: Types.ObjectId; quantity: number; }>;
+  orderItems: Array<{ product: Types.ObjectId; quantity: number }>;
   deliveryFee: number;
   isDelivered: boolean;
   isPaid: boolean;
@@ -33,10 +33,50 @@ const orderSchema = new Schema<IOrder>(
     isPaid: { type: Boolean, default: false },
     totalOrderPrice: { type: Number },
     deliveryAddress: String,
-    paymentMethodType: { type: String, default: 'Cash' }
+    paymentMethodType: { type: String, default: 'Cash' },
   },
   { timestamps: true }
 );
 
 const Order = model<IOrder>('Order', orderSchema);
 export default Order;
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    CreateOrderResponse:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        user:
+ *          type: string
+ *        cookId:
+ *          type: string
+ *        orderItems:
+ *          type: array
+ *          items:
+ *            type: object
+ *            properties:
+ *              product:
+ *                type: string
+ *              quantity:
+ *                type: number
+ *        deliveryFee:
+ *          type: number
+ *        isDelivered:
+ *          type: boolean
+ *        isPaid:
+ *          type: boolean
+ *        totalOrderPrice:
+ *          type: number
+ *        deliveryAddress:
+ *          type: string
+ *        paymentMethodType:
+ *          type: string
+ *        createdAt:
+ *          type: string
+ *        updatedAt:
+ *          type: string
+ */
