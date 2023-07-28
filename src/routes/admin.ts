@@ -37,6 +37,21 @@ router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
  *        description: Get all dishes for the admin,
  *      403:
  *        description: Forbidden
+ *  post:
+ *    tags:
+ *    - Admin
+ *    summary: Create a dish
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/CreateDishInput'
+ *    responses:
+ *      200:
+ *        description: Dish created
+ *      401:
+ *        description: Unauthorized
  */
 router.route("/dishes")
   .get(protect, allowedTo(['admin']), getAllDishes)

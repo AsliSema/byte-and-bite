@@ -98,6 +98,48 @@ DishSchema.pre<IDish>("validate", async function (this: IDish, next) {
     }
 });
 
+
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     CreateDishInput:
+ *       type: object
+ *       required:
+ *         - cook
+ *         - name
+ *         - description
+ *         - category 
+ *         - quantity
+ *         - price
+ *       properties:
+ *         cook:
+ *           type: Types.ObjectId
+ *           default: 64b4102c207f8f000c724b84
+ *         name:
+ *           type: string
+ *           default: İçli Köfte
+ *         description:
+ *           type: string
+ *           default: I craft my handmade içli köfte by meticulously selecting fine bulgur, tender beef, and fresh herbs while never compromising on quality and freshness. This unique touch holds the secret, absent in industrial productions, at the heart of my içli köfte; because for me, making içli köfte is not just a job, but also an expression of love and dedication reflecting my culture and values.
+ *         specificAllergies:
+ *           type: string
+ *           default: []      
+ *         quantity:
+ *           type: number
+ *           default: 27
+ *         price:
+ *           type: number
+ *           default: 10 
+ *         category:
+ *           type: string
+ *           default: lunch
+ *         images:
+ *           type: string
+ *           default: []                             
+ */ 
+
 const Dish = model<IDish>("Dish", DishSchema);
 
 export default Dish;
