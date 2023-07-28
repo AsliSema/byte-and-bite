@@ -11,10 +11,39 @@ const {
 const router = express.Router();
 
 // User
+
+/**
+ * @openapi
+ * '/api/admin/users/{userID}':
+ *  put:
+ *     tags:
+ *     - Admin
+ *     summary: Update the user
+ *     parameters:
+ *      - name: userID
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ */
+
 router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
 
 // dish
-
 
 /**
  * @openapi

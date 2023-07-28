@@ -90,6 +90,42 @@ userSchema.pre("save", async function (this: IUser, next) {
 });
 
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         firstname:
+ *           type: string
+ *           default: Alejandro
+ *         lastname:
+ *           type: string
+ *           default: Martinez
+ *         email:
+ *           type: string
+ *           default: amartinez@example.com
+ *         phone:
+ *           type: string
+ *           default: 555 123 4567     
+ *         profileImage:
+ *           type: string
+ *         password:
+ *           type: string
+ *         role:
+ *           type: string
+ *           default: cook
+ *         isActive:
+ *           type: string
+ *           default: true
+ *         address:
+ *           type: object
+ *           default: { city: İstanbul, district: Üsküdar, neighborhood: Mimar Sinan Mah, addressInfo: Çavuşdere Caddesi No:41A İç kapı no:30}   
+ */  
+
+
+
 // Create the user model
 const User = mongoose.model<IUser>('User', userSchema);
 
