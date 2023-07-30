@@ -8,19 +8,13 @@ const {
 
 const router = express.Router();
 
-/**
- * @swagger
- * tags:
- *   name: Auth
- *   description: API endpoints for user authentication and users
- */
 
 /**
  * @swagger
- * /signup:
+ * /api/users/signup
  *   post:
  *     summary: Register a new user
- *     tags: [Auth]
+ *     tags: Users
  *     requestBody:
  *       required: true
  *       content:
@@ -50,10 +44,10 @@ router.route('/signin').post(signinValidator, signinUser);
 
 /**
  * @swagger
- * /signin:
+ * /api/users/signin:
  *   post:
  *     summary: User login
- *     tags: [Auth]
+ *     tags: Users
  *     requestBody:
  *       required: true
  *       content:
@@ -83,7 +77,7 @@ router.post('/signin', signinValidator, signinUser);
  * /profile:
  *   get:
  *     summary: Get user profile
- *     tags: [Auth]
+ *     tags: User
  *     responses:
  *       200:
  *         description: Successful operation
@@ -98,7 +92,7 @@ router.route('/profile').get(protect, getUserProfile);
  * /:
  *   get:
  *     summary: Get all users (admin only)
- *     tags: [Auth]
+ *     tags: User
  *     responses:
  *       200:
  *         description: Successful operation

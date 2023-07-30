@@ -26,12 +26,6 @@ router.route("/dish/review/:reviewID").delete(protect, allowedTo(['admin']), del
 
 // Order
 
-/**
- * @swagger
- * tags:
- *   name: Admin
- *   description: API endpoints for admin operations
- */
 
 /**
  * @openapi
@@ -63,10 +57,10 @@ router.route("/orders").get(protect, allowedTo(["admin"]), getAllOrders);
 
 /**
  * @swagger
- * /order/{orderID}:
+ * /api/admin/order/{orderID}:
  *   get:
  *     summary: Get order by ID
- *     tags: [Admin]
+ *     tags: Admin
  *     parameters:
  *       - in: path
  *         name: orderID
@@ -87,10 +81,10 @@ router.route("/orders").get(protect, allowedTo(["admin"]), getAllOrders);
  
 /**
  * @swagger
- * /order/{orderID}:
+ * api/admin/order/{orderID}:
  *   put:
  *     summary: Update order status
- *     tags: [Admin]
+ *     tags: Admin
  *     parameters:
  *       - in: path
  *         name: orderID
