@@ -80,6 +80,8 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
       }
 
       let filteredDishes = dishes.filter((dish) => {
+        console.log('dish', dish);
+        console.log('dish.cook:', dish.cook);
         const cook = Object.assign(dish.cook);
         return (
           cook.address.city === req?.user?.address.city &&

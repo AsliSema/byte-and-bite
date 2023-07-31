@@ -22,28 +22,158 @@ import {
 
 const router = express.Router();
 
-router
-  .route('/')
+router.route('/')
+
+  /**
+ * @openapi
+ * /api/dish/:
+ *   get:
+ *     summary: Get All Dishes
+ *     description: Retrieve dishes which related to the customer's location also the customer can filter by dish category<br>Retrieve dishes which related to the cook's ID<br>fetches just 10 dish if the user not logged in.
+ *     tags:
+ *       - Dish
+ *     parameters:
+ *       - name: category
+ *         type: number
+ *         in: query
+ *         required: false
+ *         description: To filter dishes by their category
+ *       - name: pageSize
+ *         in: query
+ *         type: number
+ *         required: false
+ *         description: Results count to be fetched in one page
+ *       - name: pageNumber
+ *         type: number
+ *         in: query
+ *         required: false
+ *         description: The dish page that needs to be fetched
+ *     responses:
+ *       '200':
+ *         description: Successful response with an array of dishes and empty array of dishes if nothing found.
+ */
   .get(getUser, getAllDishes)
+
+  /**
+   * @openapi
+   * /api/dish:
+   *   post:
+   *     summary: Create a dish
+   *     description: Create a dish (Cook Only)
+   *     tags:
+   *       - Dish
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Dish'
+   *     responses:
+   *       '201':
+   *         description: Successful response with created dish information.
+   *       '400':
+   *         description: BAD_REQUEST for invalid dish data.
+   *       '401':
+   *         description: UNAUTHORIZED if the user is not logged in or his token is invalid.
+   *       '403':
+   *         description: FORBIDDEN. if the user is not a cook
+   */
   .post(protect, allowedTo(['cook']), createDishValidator, createDish);
 
 router
   .route('/:id')
+
+  /**
+ * @openapi
+ * /api/dish/{dishID}:
+ *   get:
+ *     summary: Get a dish by ID
+ *     description: Getting dish's info by it's ID
+ *     tags:
+ *       - Dish
+ *     parameters:
+ *       - name: dishID
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: Dish ID to be fetched
+ *     responses:
+ *       '200':
+ *         description: Successful response with dish information.
+ *       '400':
+ *         description: BAD_REQUEST if it's invalid ID
+ *       '404':
+ *         description: NOT_FOUND if the dish not found
+ */
   .get(getDishValidator, getDishById)
+
+  /**
+   * @openapi
+   * /api/dish/{dishID}:
+   *   put:
+   *     summary: Update Dish Data
+   *     description: Update dish data (Cook Only).
+   *     tags:
+   *       - Dish
+   *     parameters:
+   *       - name: dishID
+   *         in: path
+   *         required: true
+   *         description: The ID of the dish to be updated
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Dish'
+   *     responses:
+   *       '200':
+   *         description: Successful response with updated dish information.
+   *       '400':
+   *         description: BAD_REQUEST Dish not found or wrong dishID value.
+   *       '401':
+   *         description: UNAUTHORIZED if the user is not logged in or his token is invalid.
+   *       '403':
+   *         description: FORBIDDEN. if user is not a cook
+   *       '404':
+   *         description: NOT_FOUND if the dish not found.
+   */
   .put(protect, allowedTo(['cook']), updateDishValidator, updateDish)
-  .delete(
-    protect,
-    allowedTo(['admin', 'cook']),
-    deleteDishValidator,
-    deleteDish
-  );
+
+  /**
+ * @openapi
+ * /api/dish/{dishID}:
+ *   delete:
+ *     summary: Delete a dish by ID
+ *     description: Delete a dish by it's ID
+ *     tags:
+ *       - Dish
+ *     parameters:
+ *       - name: dishID
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: Dish ID to be deleted
+ *     responses:
+ *       '200':
+ *         description: Successful response with the deleted dish info.
+ *       '400':
+ *         description: BAD_REQUEST if it's invalid ID.
+ *       '401':
+ *         description: UNAUTHORIZED if the user is not logged in or his token is invalid.
+ *       '403':
+ *         description: FORBIDDEN if the user is not a cook who own this dish
+ *       '404':
+ *         description: NOT_FOUND if the dish not found
+ */
+  .delete(protect, allowedTo(['cook']), deleteDishValidator, deleteDish);
 
 /**
  * @openapi
  * '/api/dish/review/{dishID}':
  *   post:
  *     tags:
- *       - /dish/review
+ *       - Dish Review
  *     summary: review a specified dish.
  *     description: Send a review after ordering that dish only.
  *     security:
@@ -93,7 +223,7 @@ router
  * '/api/dish/review/{reviewID}':
  *   delete:
  *     tags:
- *       - /dish/review
+ *       - Dish Review
  *     summary: Delete a specified review By ID.
  *     description: Delete a review if its exist.
  *     security:
@@ -118,7 +248,7 @@ router
  *         description: Internal Server Error
  *   put:
  *     tags:
- *       - /dish/review
+ *       - Dish Review
  *     summary: Update a specified review By ID.
  *     description: Update a review if its exist and belongs to logged in user.
  *     security:

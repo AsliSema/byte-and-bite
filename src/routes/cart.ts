@@ -105,6 +105,43 @@ router
  *         description: FORBIDDEN.
  */
   .delete(protect, allowedTo(['customer']), deleteDishFromCartItems)
+
+  /**
+   * @openapi
+   * /api/cart/{dishID}:
+   *   put:
+   *     summary: Update cart item quantity
+   *     description: Update dish quantity in cart.
+   *     tags:
+   *       - Cart
+   *     parameters:
+   *       - name: dishID
+   *         in: path
+   *         required: true
+   *         description: The ID of the dish to be updated
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               quantity:
+   *                  type: number
+   *                  default: 1
+   *                  description: in-cart dish quantity
+   *     responses:
+   *       '200':
+   *         description: Successful response with updated cart information.
+   *       '400':
+   *         description: BAD_REQUEST Dish not found or wrong dishID value.
+   *       '401':
+   *         description: UNAUTHORIZED if the user is not logged in or his token is invalid.
+   *       '403':
+   *         description: FORBIDDEN. if the user is not a custoomer.
+   *       '404':
+   *         description: NOT_FOUND if the user doesn't have a cart yet.
+   */
   .put(protect, allowedTo(['customer']), updateCartItemQuantity);
 
 export default router;
