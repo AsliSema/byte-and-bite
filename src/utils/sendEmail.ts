@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { config } from '../config/config';
 
 type contactOptions = {
   email: string;
@@ -31,14 +32,14 @@ const sendEmailContact = async (options: contactOptions) => {
     domain: 'gmail.com',
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
+      user: config.contact.email,
+      pass: config.contact.password,
     },
   });
 
   const mailOpts: mailOpt = {
     from: options.email,
-    to: 'bytebite60@gmail.com',
+    to: config.contact.email,
     subject: options.subject,
     html: `
     <!DOCTYPE html>
@@ -88,13 +89,13 @@ const sendEmailOrder = async (options: orderOptions) => {
     domain: 'gmail.com',
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
+      user: config.contact.email,
+      pass: config.contact.password,
     },
   });
 
   const mailOpts: mailOpt = {
-    from: 'bytebite60@gmail.com',
+    from: config.contact.email,
     to: options.CookEmail,
     subject: options.subject,
     html: `
