@@ -118,7 +118,6 @@ router
    *       - name: dishID
    *         in: path
    *         required: true
-   *         default: 64b422e9cd4f0261704f3f38
    *         description: The ID of the dish to be updated
    *     requestBody:
    *       required: true
@@ -137,9 +136,9 @@ router
    *       '400':
    *         description: BAD_REQUEST Dish not found or wrong dishID value.
    *       '401':
-   *         description: UNAUTHORIZED.
+   *         description: UNAUTHORIZED if the user is not logged in or his token is invalid.
    *       '403':
-   *         description: FORBIDDEN.
+   *         description: FORBIDDEN. if the user is not a custoomer.
    *       '404':
    *         description: NOT_FOUND if the user doesn't have a cart yet.
    */

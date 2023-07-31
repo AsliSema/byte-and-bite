@@ -196,9 +196,80 @@ router
 router.route("/dish/review/:reviewID").delete(protect, allowedTo(['admin']), deleteReview);
 
 // Order
+
+/**
+ * @openapi
+ * '/api/admin/orders':
+ *  get:
+ *    tags:
+ *    - Admin
+ *    summary: Get all orders by admin
+ *    parameters:
+ *     - name: pageSize
+ *       in: query
+ *       description: The number of orders that needs to be fetched in one page
+ *       type: number
+ *     - name: pageNumber
+ *       in: query
+ *       description: The page number of orders that needs to be fetched
+ *       type: number
+ *    responses:
+ *      200:
+ *        description: Get all orders successful
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ */
 router.route("/orders").get(protect, allowedTo(["admin"]), getAllOrders);
+
+/**
+ * @swagger
+ * /api/admin/order/{orderID}:
+ *   get:
+ *     summary: Get order by ID
+ *     tags: 
+ *       - Admin
+ *     parameters:
+ *       - in: path
+ *         name: orderID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the order
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
 router.route("/order/:orderID")
   .get(protect, allowedTo(["admin"]), getOrderById)
+  
+/**
+ * @swagger
+ * /api/admin/order/{orderID}:
+ *   put:
+ *     summary: Update order status
+ *     tags: 
+ *       - Admin
+ *     parameters:
+ *       - in: path
+ *         name: orderID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the order
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */ 
   .put(protect, allowedTo(["admin"]), updateOrderStatus);
 
 export default router;

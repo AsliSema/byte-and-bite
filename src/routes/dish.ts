@@ -69,7 +69,7 @@ router.route('/')
    *           schema:
    *             $ref: '#/components/schemas/Dish'
    *     responses:
-   *       '200':
+   *       '201':
    *         description: Successful response with created dish information.
    *       '400':
    *         description: BAD_REQUEST for invalid dish data.
@@ -96,11 +96,10 @@ router
  *         type: string
  *         in: path
  *         required: true
- *         defaul: 64b422e9cd4f0261704f3f38
  *         description: Dish ID to be fetched
  *     responses:
  *       '200':
- *         description: Successful response with an array of dishes and empty array of dishes if nothing found.
+ *         description: Successful response with dish information.
  *       '400':
  *         description: BAD_REQUEST if it's invalid ID
  *       '404':
@@ -120,7 +119,6 @@ router
    *       - name: dishID
    *         in: path
    *         required: true
-   *         default: 64b422e9cd4f0261704f3f38
    *         description: The ID of the dish to be updated
    *     requestBody:
    *       required: true
@@ -164,18 +162,18 @@ router
  *       '401':
  *         description: UNAUTHORIZED if the user is not logged in or his token is invalid.
  *       '403':
- *         description: FORBIDDEN if the user is not an admin or cook who own this dish
+ *         description: FORBIDDEN if the user is not a cook who own this dish
  *       '404':
  *         description: NOT_FOUND if the dish not found
  */
-  .delete(protect, allowedTo(['admin', 'cook']), deleteDishValidator, deleteDish);
+  .delete(protect, allowedTo(['cook']), deleteDishValidator, deleteDish);
 
 /**
  * @openapi
  * '/api/dish/review/{dishID}':
  *   post:
  *     tags:
- *       - /dish/review
+ *       - Dish Review
  *     summary: review a specified dish.
  *     description: Send a review after ordering that dish only.
  *     security:
@@ -225,7 +223,7 @@ router
  * '/api/dish/review/{reviewID}':
  *   delete:
  *     tags:
- *       - /dish/review
+ *       - Dish Review
  *     summary: Delete a specified review By ID.
  *     description: Delete a review if its exist.
  *     security:
@@ -250,7 +248,7 @@ router
  *         description: Internal Server Error
  *   put:
  *     tags:
- *       - /dish/review
+ *       - Dish Review
  *     summary: Update a specified review By ID.
  *     description: Update a review if its exist and belongs to logged in user.
  *     security:

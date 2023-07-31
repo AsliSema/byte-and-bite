@@ -14,7 +14,7 @@ const router = express.Router();
  * '/api/order/{cartID}':
  *  post:
  *     tags:
- *     - /Order
+ *     - Order
  *     summary: Create an order.
  *     description: By given a cartID as a parameter, an order will be created.
  *     security:
@@ -43,7 +43,7 @@ router.route('/:cartID').post(protect, allowedTo(['customer']), createOrder);
  * '/api/order':
  *  get:
  *     tags:
- *     - /Order
+ *     - Order
  *     summary: Get all orders
  *     description: Get all orders. Admins can get all ordersr, while customers and cooks can only get their own orders.
  *     security:
@@ -66,7 +66,7 @@ router.route('/').get(protect, allowedTo(['customer', 'cook']), getAllOrders);
  * '/api/order/{orderId}':
  *  get:
  *     tags:
- *     - /Order
+ *     - Order
  *     summary: Get an order by ID
  *     description: search for an order by ID. Admins can get all ordersr by ID, while customers and cooks can only search (GET) their own order.
  *     security:
@@ -100,7 +100,7 @@ router
  * '/api/order/{orderId}':
  *   put:
  *     tags:
- *       - /Order
+ *       - Order
  *     summary: Update an order by ID
  *     description: Search for an order by ID and update isPaid & isDelivered. Cook can only access this API.
  *     security:
