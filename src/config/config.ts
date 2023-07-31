@@ -11,6 +11,9 @@ const SERVER_PORT = process.env.SERVER_PORT || 1337;
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
 
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || '';
+const CONTACT_PASSWORD = process.env.CONTACT_PASSWORD || '';
+
 export const config = {
     mongo: {
         url: DB_CONN_STRING,
@@ -21,5 +24,9 @@ export const config = {
     },
     jwt: {
         secret: JWT_SECRET
+    },
+    contact: {
+        email: CONTACT_EMAIL,
+        password: CONTACT_PASSWORD
     }
 }
