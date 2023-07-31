@@ -1,5 +1,5 @@
 import express from 'express';
-import { updateUser,getAllUsers } from '../controllers/auth';
+import { updateUser,getAllUsers, getUserProfile, registerUser, deleteUser } from '../controllers/auth';
 import { createDish, deleteDish, deleteReview, getAllDishes, updateDish } from '../controllers/dish';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 import { getAllOrders, getOrderById, updateOrderStatus } from '../controllers/order';
@@ -7,6 +7,9 @@ const {
   updateDishValidator,
   deleteDishValidator
 } = require('../utils/validators/dishValidator');
+const {
+  signupValidator
+} = require('../utils/validators/authValidator');
 
 const router = express.Router();
 
@@ -35,13 +38,59 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  *       403:
- *         description: Forbidden 
+ *         description: Forbidden
+ *   post:
+ *     summary: Create a user
+ *     tags:
+ *       - Admin
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - email
+ *               - password
+ *               - phone 
+ *               - address 
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: Successful response with added user informations
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden  
  */
-router.route("/users").get(protect, allowedTo(["admin"]), getAllUsers);
+router.route("/users")
+      .get(protect, allowedTo(["admin"]), getAllUsers)
+      .post(protect, allowedTo(["admin"]), signupValidator, registerUser)
 
 /**
  * @openapi
  * '/api/admin/users/{userID}':
+ *  get:
+ *     tags:
+ *     - Admin
+ *     summary: Get the user profile
+ *     parameters:
+ *      - name: userID
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
  *  put:
  *     tags:
  *     - Admin
@@ -66,9 +115,30 @@ router.route("/users").get(protect, allowedTo(["admin"]), getAllUsers);
  *         description: Forbidden
  *       404:
  *         description: User not found
+ *  delete:
+ *     tags:
+ *     - Admin
+ *     summary: Delete the user
+ *     parameters:
+ *      - name: userID
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
  */
 
-router.route('/users/:userID').put(protect, allowedTo(['admin']), updateUser);
+router.route('/users/:userID')
+      .get(protect, allowedTo(["admin"]), getUserProfile)
+      .put(protect, allowedTo(['admin']), updateUser)
+      .delete(protect, allowedTo(["admin"]), deleteUser)
 
 // dish
 

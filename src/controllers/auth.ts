@@ -89,21 +89,27 @@ const signinUser = asyncHandler(async (req: Request, res: Response, next: NextFu
  * @access Private
  */
 const getUserProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const user = await User.findById(req.user?._id);
+    let user;
 
-    if (user) {
-        res.json({
-            _id: user._id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-            phone: user.phone,
-            role: user.role,
-            address: user.address,
-        });
+    if (req.user?.role === "admin") {
+        user = await User.findById(req.params.userID)
     } else {
-        return next(new ApiError(StatusCodes.NOT_FOUND, `Incorrect password or Email address`))
+        user = await User.findById(req.user?._id);
     }
+
+    if(!user){
+        return next(new ApiError(StatusCodes.NOT_FOUND, `User not found`))
+    }
+
+    res.status(StatusCodes.OK).json({
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        address: user.address,
+    });
 });
 
 /**
@@ -168,10 +174,30 @@ const updateUser = asyncHandler(async (req: Request, res: Response, next: NextFu
     });
 });
 
+const deleteUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    let deletedUser;
+
+    if(req.user?.role === "admin"){
+        deletedUser = await User.findByIdAndDelete(req.params.userID)
+    } else {
+        deletedUser = await User.findByIdAndDelete(req.user?._id)
+    }
+
+    if (!deletedUser) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, "User not found"))
+    }
+
+    res.status(StatusCodes.OK).json({
+        message: 'User deleted',
+        deletedUser: deletedUser 
+    });
+})
+
 export {
     registerUser,
     signinUser,
     getUserProfile,
     getAllUsers,
-    updateUser
+    updateUser,
+    deleteUser
 };

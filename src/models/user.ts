@@ -89,6 +89,12 @@ userSchema.pre("save", async function (this: IUser, next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
+// Create the user model
+const User = mongoose.model<IUser>('User', userSchema);
+
+// Export the user
+export default User;
+
 
 /**
  * @openapi
@@ -108,26 +114,19 @@ userSchema.pre("save", async function (this: IUser, next) {
  *           default: amartinez@example.com
  *         phone:
  *           type: string
- *           default: 555 123 4567     
+ *           default: 5551234567     
  *         profileImage:
  *           type: string
  *         password:
  *           type: string
  *         role:
  *           type: string
- *           default: cook
+ *           default: customer
  *         isActive:
  *           type: string
  *           default: true
  *         address:
  *           type: object
- *           default: { city: "34", district: Üsküdar, neighborhood: Mimar Sinan Mah, addressInfo: Çavuşdere Caddesi No:41A İç kapı no:30}   
- */  
-
-
-
-// Create the user model
-const User = mongoose.model<IUser>('User', userSchema);
-
-// Export the user
-export default User;
+ *           default: { city: "34", district: Üsküdar, neighborhood: Mimar Sinan Mah, addressInfo: Çavuşdere Caddesi No:41A İç kapı no:30}
+ *    
+ */ 
