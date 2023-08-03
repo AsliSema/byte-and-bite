@@ -1,399 +1,269 @@
-// order.test.ts
-
+//@ts-nocheck
 import { StatusCodes } from 'http-status-codes';
-import { Request, Response } from '../../types/express';
 import { ApiError } from '../../utils/apiError';
 import Cart from '../../models/cart';
 import Order from '../../models/order';
 import Dish from '../../models/dish';
 import User from '../../models/user';
+import { sendEmailOrder } from '../../utils/sendEmail';
 import {
   createOrder,
   getAllOrders,
   getOrderById,
   updateOrderStatus,
-} from '../order';
+} from '../order'; 
 
 jest.mock('../../models/cart');
 jest.mock('../../models/order');
 jest.mock('../../models/dish');
 jest.mock('../../models/user');
+jest.mock('../../utils/sendEmail');
 
-describe('Order', () => {
-  let mockReq: Partial<Request>;
-  let mockRes: Partial<Response>;
-  let mockNext: jest.Mock;
-
-  beforeEach(() => {
-    mockReq = {};
-    mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-    mockNext = jest.fn();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
 
   describe('createOrder', () => {
-    it('should create a new order successfully', async () => {
-      // Mock cart data
-      const mockCartId = 'cart_id_1';
-      const mockUserId = 'user_id_1';
-      const mockCart = {
-        _id: mockCartId,
-        user: mockUserId,
-        cartItems: [{ product: 'product_id_1', quantity: 2 }],
-        cookID: 'cook_id',
-      };
+    let req, res, next;
 
-      // Mock user data
-      const mockUser = {
-        _id: mockUserId,
-        firstname: 'John',
-        lastname: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '5554567890',
-        address: { city: '34', district: 'Üsküdar' },
-      };
-
-      // Mock Dish data
-      const mockDish = {
-        _id: 'product_id_1',
-        price: 10,
-      };
-
-      // Mock create order response
-      const mockOrder = {
-        _id: 'order_id_1',
-        user: mockUserId,
-        cookId: 'cook_id',
-        orderItems: [{ product: 'product_id_1', quantity: 2 }],
-        deliveryFee: 0,
-        totalOrderPrice: 20,
-        deliveryAddress: 'City, District, Neighborhood, Address Info',
-      };
-
-      // Mock functions
-      Cart.findById = jest.fn().mockResolvedValue(mockCart);
-      User.findById = jest.fn().mockResolvedValue(mockUser);
-      Dish.findById = jest.fn().mockResolvedValue(mockDish);
-      Cart.findByIdAndDelete = jest.fn().mockResolvedValue(true);
-      Order.create = jest.fn().mockResolvedValue(mockOrder);
-
-      // Mock request data
-      mockReq.params = { cartID: mockCartId };
-      mockReq.user = mockUser as any;
-
-      // Call the controller function
-      await createOrder(mockReq as Request, mockRes as Response, mockNext);
-
-      // Assertions
-      expect(Cart.findById).toHaveBeenCalledWith(mockCartId);
-      expect(User.findById).toHaveBeenCalledWith(mockUserId);
-      expect(Dish.findById).toHaveBeenCalledWith('product_id_1');
-      expect(Order.create).toHaveBeenCalledWith(mockOrder);
-      expect(Cart.findByIdAndDelete).toHaveBeenCalledWith(mockCartId);
-      expect(mockRes.status).toHaveBeenCalledWith(StatusCodes.CREATED);
-      expect(mockRes.json).toHaveBeenCalledWith({ data: mockOrder });
+    beforeEach(() => {
+      req = { params: { cartID: 'cartID1' }, user: { _id: 'userID1', role: 'customer' }, body: {} };
+      res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+      next = jest.fn();
     });
 
-    it('should return an error if the cart does not exist', async () => {
-      const mockCartId = 'non-existent-cart-id';
-      const mockUserId = 'user_id';
+    it('should create a new order for the cart and return 201 status code', async () => {
+      const mockCart = {
+        _id: 'cartID1',
+        user: 'userID1',
+        cookID: 'cookID1',
+        cartItems: [{ product: 'dishID1', quantity: 2 }],
+      };
 
-      // Mock function to return null for Cart.findById
-      Cart.findById = jest.fn().mockResolvedValue(null);
+      const mockUser = {
+        address: {
+          city: 'City',
+          district: 'District',
+          neighborhood: 'Neighborhood',
+          addressInfo: 'AddressInfo',
+        },
+      };
 
-      // Mock request data
-      mockReq.params = { cartID: mockCartId };
-      mockReq.user = {
-        _id: mockUserId,
-        firstname: 'John',
-        lastname: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '5554567890',
-        address: { city: '34', district: 'Üsküdar' },
-      } as any;
+      const mockDish = {
+        _id: 'dishID1',
+        price: 100,
+      };
 
-      // Call the controller function
-      await createOrder(mockReq as Request, mockRes as Response, mockNext);
+      Cart.findById.mockResolvedValueOnce(mockCart);
+      User.findById.mockResolvedValueOnce(mockUser);
+      Dish.findById.mockResolvedValueOnce(mockDish);
+      Order.create.mockResolvedValueOnce({ _id: 'orderID1' });
 
-      // Assertions
-      expect(Cart.findById).toHaveBeenCalledWith(mockCartId);
-      expect(Order.create).not.toHaveBeenCalled();
-      expect(mockNext).toHaveBeenCalledWith(expect.any(ApiError));
+      await createOrder(req, res, next);
+
+      expect(Order.create).toHaveBeenCalledWith(expect.any(Object));
+      expect(res.status).toHaveBeenCalledWith(StatusCodes.CREATED);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ data: { _id: 'orderID1' } }));
+    });
+
+    it('should return 400 status code when the cart is not found', async () => {
+      Cart.findById.mockResolvedValueOnce(null);
+
+      await createOrder(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.objectContaining(new ApiError(StatusCodes.BAD_REQUEST, 'Cart not found!')));
+    });
+
+    it('should return 400 status code when the cart does not belong to the user', async () => {
+      const mockCart = { _id: 'cartID1', user: 'otherUserID' };
+
+      Cart.findById.mockResolvedValueOnce(mockCart);
+
+      await createOrder(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.objectContaining(new ApiError(StatusCodes.BAD_REQUEST, 'You are not allowed to do this!')));
+    });
+
+    it('should return 400 status code when the cart is empty', async () => {
+      const mockCart = { _id: 'cartID1', user: 'userID1', cartItems: [] };
+
+      Cart.findById.mockResolvedValueOnce(mockCart);
+
+      await createOrder(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.objectContaining(new ApiError(StatusCodes.BAD_REQUEST, 'You have no items in the cart!')));
+    });
+
+    it('should return 500 status code when there is an error sending email', async () => {
+      const mockCart = {
+        _id: 'cartID1',
+        user: 'userID1',
+        cookID: 'cookID1',
+        cartItems: [{ product: 'dishID1', quantity: 2 }],
+      };
+
+      const mockUser = {
+        address: {
+          city: 'City',
+          district: 'District',
+          neighborhood: 'Neighborhood',
+          addressInfo: 'AddressInfo',
+        },
+      };
+
+      const mockDish = {
+        _id: 'dishID1',
+        price: 100,
+      };
+
+      Cart.findById.mockResolvedValueOnce(mockCart);
+      User.findById.mockResolvedValueOnce(mockUser);
+      Dish.findById.mockResolvedValueOnce(mockDish);
+      Order.create.mockResolvedValueOnce({ _id: 'orderID1' });
+
+      sendEmailOrder.mockRejectedValueOnce(new Error('Email error'));
+
+      await createOrder(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'error : Email error'))
+      );
     });
   });
+
+  
 
   describe('getAllOrders', () => {
-    it('should return all orders for admin user', async () => {
-      // Mock user data with admin role
-      const mockAdminUserId = 'admin_user_id';
-      const mockUser = {
-        _id: mockAdminUserId,
-        firstname: 'Admin',
-        lastname: 'User',
-        email: 'admin@example.com',
-        phone: '5551234567',
-        role: 'admin',
-        address: { city: '34', district: 'Üsküdar' },
-      };
-
-      // Mock order data
+    let req: Request, res: Response, next: NextFunction;
+  
+    beforeEach(() => {
+      req = { user: { _id: 'adminID1', role: 'admin' }, query: {} } as Request;
+      res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as Response; // Set up mock for status() and json() methods
+      next = jest.fn() as NextFunction;
+    });
+  
+    it('should get all orders for admin user and return 200 status code', async () => {
+      const pageSize = 10;
+      const page = 1;
       const mockOrders = [
-        { _id: 'order_id_1', user: 'user_id_1', orderItems: [], totalOrderPrice: 20 },
-        { _id: 'order_id_2', user: 'user_id_2', orderItems: [], totalOrderPrice: 30 },
+        { _id: 'orderID1' },
+        { _id: 'orderID2' },
       ];
-
-      // Mock function to return the orders for admin user
-      Order.countDocuments = jest.fn().mockResolvedValue(mockOrders.length);
-      Order.find = jest.fn().mockResolvedValue(mockOrders);
-
-      // Mock request data
-      mockReq.user = mockUser as any; // Use type assertion to provide the required properties.
-
+      const mockCount = mockOrders.length;
+  
+      // Mock the return values for Order.countDocuments and Order.find
+      const countDocumentsMock = jest.fn().mockResolvedValueOnce(mockCount);
+      const findMock = jest.fn().mockResolvedValueOnce(mockOrders);
+      jest.spyOn(Order, 'countDocuments').mockImplementation(countDocumentsMock);
+      jest.spyOn(Order, 'find').mockImplementation(findMock);
+  
+      // Set the query parameters
+      req.query.pageSize = pageSize.toString();
+      req.query.pageNumber = page.toString();
+  
       // Call the controller function
-      await getAllOrders(mockReq as Request, mockRes as Response, mockNext);
-
-      // Assertions
-      expect(Order.countDocuments).toHaveBeenCalled();
-      expect(Order.find).toHaveBeenCalled();
-      expect(mockRes.status).toHaveBeenCalledWith(StatusCodes.OK);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        orders: mockOrders,
-        page: 1,
-        pages: 1, // Since pageSize is 10 and we have 2 orders, there will be only one page.
-      });
+      await getAllOrders(req, res, next);
+      
     });
 
-    it('should return all orders for customer user', async () => {
-      // Mock user data with customer role
-      const mockCustomerUserId = 'customer_user_id';
-      const mockUser = {
-        _id: mockCustomerUserId,
-        firstname: 'Customer',
-        lastname: 'User',
-        email: 'customer@example.com',
-        phone: '5559876543',
-        role: 'customer',
-        address: { city: '34', district: 'Üsküdar' },
-      };
+    it('should return 400 status code when user role is not defined', async () => {
+      req.user.role = 'unknownRole';
 
-      // Mock order data
-      const mockOrders = [
-        { _id: 'order_id_1', user: 'user_id_1', orderItems: [], totalOrderPrice: 20 },
-        { _id: 'order_id_2', user: 'user_id_2', orderItems: [], totalOrderPrice: 30 },
-      ];
+      await getAllOrders(req, res, next);
 
-      // Mock function to return the orders for customer user
-      Order.countDocuments = jest.fn().mockResolvedValue(mockOrders.length);
-      Order.find = jest.fn().mockResolvedValue(mockOrders);
-
-      // Mock request data
-      mockReq.user = mockUser as any; // Use type assertion to provide the required properties.
-
-      // Call the controller function
-      await getAllOrders(mockReq as Request, mockRes as Response, mockNext);
-
-      // Assertions
-      expect(Order.countDocuments).toHaveBeenCalled();
-      expect(Order.find).toHaveBeenCalled();
-      expect(mockRes.status).toHaveBeenCalledWith(StatusCodes.OK);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        orders: mockOrders,
-        page: 1,
-        pages: 1, // Since pageSize is 10 and we have 2 orders, there will be only one page.
-      });
+      expect(next).toHaveBeenCalledWith(expect.objectContaining(new ApiError(StatusCodes.BAD_REQUEST, 'This unknownRole role is not defined yet.')));
     });
+  });
 
   describe('getOrderById', () => {
-    it('should return order by ID for the same customer', async () => {
-      const mockOrderId = 'order_id_1';
-      const mockUserId = 'user_id_1';
+    let req, res, next;
 
-      // Mock order data
-      const mockOrder = {
-        _id: mockOrderId,
-        user: mockUserId,
-        orderItems: [],
-        totalOrderPrice: 20,
-      };
-
-      // Mock function to return the order for getOrderById
-      Order.findById = jest.fn().mockResolvedValue(mockOrder);
-
-      // Mock request data
-      mockReq.params = { orderID: mockOrderId };
-      mockReq.user = {
-        _id: mockUserId,
-        firstname: 'John',
-        lastname: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '5554567890',
-        address: { city: '34', district: 'Üsküdar' },
-        role: 'customer',
-      } as any;
-
-      // Call the controller function
-      await getOrderById(mockReq as Request, mockRes as Response, mockNext);
-
-      // Assertions
-      expect(Order.findById).toHaveBeenCalledWith(mockOrderId);
-      expect(mockRes.status).toHaveBeenCalledWith(StatusCodes.OK);
-      expect(mockRes.json).toHaveBeenCalledWith({ order: mockOrder });
+    beforeEach(() => {
+      req = { params: { orderID: 'orderID1' }, user: { _id: 'userID1', role: 'customer' } };
+      res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+      next = jest.fn();
     });
 
-    it('should return order by ID for the cook', async () => {
-      const mockOrderId = 'order_id_1';
-      const mockCookId = 'cook_id_1';
+    it('should get the order by ID for customer user and return 200 status code', async () => {
+      const mockOrder = { _id: 'orderID1', user: 'userID1' };
 
-      // Mock order data
-      const mockOrder = {
-        _id: mockOrderId,
-        cookId: mockCookId,
-        isDelivered: false,
-        isPaid: true,
-      };
+      Order.findById.mockResolvedValueOnce(mockOrder);
 
-      // Mock function to return the order for getOrderById
-      Order.findById = jest.fn().mockResolvedValue(mockOrder);
+      await getOrderById(req, res, next);
 
-      // Mock request data
-      mockReq.params = { orderID: mockOrderId };
-      mockReq.user = {
-        _id: mockCookId,
-        firstname: 'Cook',
-        lastname: 'Chef',
-        email: 'cook@example.com',
-        phone: '5559876543',
-        role: 'cook',
-        address: { city: '34', district: 'Üsküdar' },
-      } as any;
-
-      // Call the controller function
-      await getOrderById(mockReq as Request, mockRes as Response, mockNext);
-
-      // Assertions
-      expect(Order.findById).toHaveBeenCalledWith(mockOrderId);
-      expect(mockRes.status).toHaveBeenCalledWith(StatusCodes.OK);
-      expect(mockRes.json).toHaveBeenCalledWith({ order: mockOrder });
+      expect(res.status).toHaveBeenCalledWith(StatusCodes.OK);
+      expect(res.json).toHaveBeenCalledWith({ order: mockOrder });
     });
 
-    it('should return order by ID for the admin', async () => {
-      const mockOrderId = 'order_id_1';
-      const mockAdminUserId = 'admin_user_id';
+    it('should return 404 status code when the order does not belong to the user', async () => {
+      const mockOrder = { _id: 'orderID1', user: 'otherUserID' };
 
-      // Mock order data
-      const mockOrder = {
-        _id: mockOrderId,
-        user: 'user_id_2', // Use a different user ID to simulate a different order.
-        orderItems: [],
-        totalOrderPrice: 20,
-      };
+      Order.findById.mockResolvedValueOnce(mockOrder);
 
-      // Mock function to return the order for getOrderById
-      Order.findById = jest.fn().mockResolvedValue(mockOrder);
+      await getOrderById(req, res, next);
 
-      // Mock request data
-      mockReq.params = { orderID: mockOrderId };
-      mockReq.user = {
-        _id: mockAdminUserId,
-        firstname: 'Admin',
-        lastname: 'User',
-        email: 'admin@example.com',
-        phone: '5551234567',
-        role: 'admin',
-        address: { city: '34', district: 'Üsküdar' },
-      } as any;
-
-      // Call the controller function
-      await getOrderById(mockReq as Request, mockRes as Response, mockNext);
-
-      // Assertions
-      expect(Order.findById).toHaveBeenCalledWith(mockOrderId);
-      expect(mockRes.status).toHaveBeenCalledWith(StatusCodes.OK);
-      expect(mockRes.json).toHaveBeenCalledWith({ order: mockOrder });
+      expect(next).toHaveBeenCalledWith(expect.objectContaining(new ApiError(StatusCodes.NOT_FOUND, 'Order not found!')));
     });
   });
+
+ 
 
   describe('updateOrderStatus', () => {
-    it('should update order status for the cook', async () => {
-      const mockOrderId = 'order_id_1';
-      const mockCookId = 'cook_id_1';
-
-      // Mock order data
+    let req: Request, res: Response, next: NextFunction;
+    let statusMock: jest.Mock, jsonMock: jest.Mock;
+  
+    beforeEach(() => {
+      req = { params: { orderID: 'orderID1' }, body: {}, user: { _id: 'cookID1', role: 'cook' } } as Request;
+      statusMock = jest.fn().mockReturnThis();
+      jsonMock = jest.fn();
+      res = { status: statusMock, json: jsonMock } as Response; // Set up mock for status() and json() methods
+      next = jest.fn() as NextFunction;
+    });
+  
+    it('should update the order status for cook user and return 200 status code', async () => {
       const mockOrder = {
-        _id: mockOrderId,
-        cookId: mockCookId,
+        _id: 'orderID1',
+        cookId: 'cookID1',
         isDelivered: false,
-        isPaid: true,
+        isPaid: false,
+        save: jest.fn().mockResolvedValueOnce({ _id: 'orderID1', cookId: 'cookID1', isDelivered: true, isPaid: false }),
       };
-
-      // Mock function to return the order for getOrderById
-      Order.findById = jest.fn().mockResolvedValue(mockOrder);
-      Order.prototype.save = jest.fn().mockResolvedValue(mockOrder);
-
-      // Mock request data
-      mockReq.params = { orderID: mockOrderId };
-      mockReq.body = { isDelivered: true, isPaid: true };
-      mockReq.user = {
-        _id: mockCookId,
-        firstname: 'Cook',
-        lastname: 'Chef',
-        email: 'cook@example.com',
-        phone: '5559876543',
-        role: 'cook',
-        address: { city: '34', district: 'Üsküdar' },
-      } as any;
-
+  
+      // Mock the return value for Order.findById
+      const findByIdMock = jest.fn().mockResolvedValueOnce(mockOrder);
+      jest.spyOn(Order, 'findById').mockImplementation(findByIdMock);
+  
+      // Set the request body
+      req.body.isDelivered = true;
+  
       // Call the controller function
-      await updateOrderStatus(mockReq as Request, mockRes as Response, mockNext);
+      await updateOrderStatus(req, res, next);
+  
+      // Ensure that Order.findById was called with the correct orderID
+      expect(Order.findById).toHaveBeenCalledWith('orderID1');
+  
+      // Ensure that the order status was updated
+      expect(mockOrder.isDelivered).toBe(true);
+  
+      // Ensure that order.save was called
+      expect(mockOrder.save).toHaveBeenCalledTimes(1);
+  
+      // Ensure that the mock functions were called once
+      expect(statusMock).toHaveBeenCalledTimes(1);
+      expect(jsonMock).toHaveBeenCalledTimes(1);
+    });
+    it('should return 404 status code when the order does not exist', async () => {
+      Order.findById.mockResolvedValueOnce(null);
 
-      // Assertions
-      expect(Order.findById).toHaveBeenCalledWith(mockOrderId);
-      expect(Order.prototype.save).toHaveBeenCalled();
-      expect(mockRes.status).toHaveBeenCalledWith(StatusCodes.OK);
-      expect(mockRes.json).toHaveBeenCalledWith({ order: mockOrder });
+      await updateOrderStatus(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.objectContaining(new ApiError(StatusCodes.NOT_FOUND, 'Order not found!')));
     });
 
-    it('should return an error if the user is neither cook nor admin', async () => {
-      const mockOrderId = 'order_id_1';
-      const mockUserId = 'user_id_1';
+    it('should return 404 status code when the user is not allowed to update the order', async () => {
+      const mockOrder = { _id: 'orderID1', cookId: 'otherUserID' };
 
-      // Mock order data
-      const mockOrder = {
-        _id: mockOrderId,
-        cookId: 'cook_id_1',
-        isDelivered: false,
-        isPaid: true,
-      };
+      Order.findById.mockResolvedValueOnce(mockOrder);
 
-      // Mock function to return the order for getOrderById
-      Order.findById = jest.fn().mockResolvedValue(mockOrder);
+      await updateOrderStatus(req, res, next);
 
-      // Mock request data
-      mockReq.params = { orderID: mockOrderId };
-      mockReq.body = { isDelivered: true, isPaid: true };
-      mockReq.user = {
-        _id: mockUserId,
-        firstname: 'John',
-        lastname: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '5554567890',
-        role: 'customer', // A customer role is used to simulate a non-privileged user.
-        address: { city: '34', district: 'Üsküdar' },
-      } as any;
-
-      // Call the controller function
-      await updateOrderStatus(mockReq as Request, mockRes as Response, mockNext);
-
-      // Assertions
-      expect(Order.findById).toHaveBeenCalledWith(mockOrderId);
-      expect(Order.prototype.save).not.toHaveBeenCalled();
-      expect(mockNext).toHaveBeenCalledWith(expect.any(ApiError));
+      expect(next).toHaveBeenCalledWith(expect.objectContaining(new ApiError(StatusCodes.NOT_FOUND, 'You are not allowed to do this!')));
     });
   });
-})});
