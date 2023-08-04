@@ -4,7 +4,6 @@ import slugify from 'slugify';
 export interface IDish extends Document {
   name: string;
   cook: Types.ObjectId;
-  review: Types.ObjectId;
   description: string;
   images: string[];
   quantity: number;
@@ -28,10 +27,6 @@ const DishSchema = new Schema<IDish>(
     cook: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-    },
-    review: {
-      type: Schema.Types.ObjectId,
-      ref: 'Review',
     },
     description: {
       type: String,
@@ -170,7 +165,7 @@ export default Dish;
  *         images:
  *           type: string
  *           default: []                             
- */ 
+ */
 
 
 /**

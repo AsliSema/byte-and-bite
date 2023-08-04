@@ -9,12 +9,12 @@ interface User {
         firstname: string;
         lastname: string;
         email: string;
-        phone: string;
+        phone?: string;
         profileImage?: string;
         password: string;
         role?: 'admin' | 'cook' | 'customer';
         isActive?: boolean;
-        address: Address;
+        address?: Address;
     };
 }
 
