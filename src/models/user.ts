@@ -5,12 +5,12 @@ export interface IUser extends Document {
   firstname: string;
   lastname: string;
   email: string;
-  phone: string;
+  phone?: string;
   profileImage?: string;
   password: string;
   role?: 'admin' | 'cook' | 'customer';
   isActive?: boolean;
-  address: Address;
+  address?: Address;
 }
 
 export interface Address {
@@ -37,15 +37,15 @@ const userSchema = new Schema<IUser>({
   },
   phone: {
     type: String,
-    required: [true, 'Phone number is required'],
+    // required: [true, 'Phone number is required'],
   },
   profileImage: {
     type: String,
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
-    minlength: [6, 'Password must have at least 6 characters']
+    // required: [true, 'Password is required'],
+    // minlength: [6, 'Password must have at least 6 characters']
   },
   role: {
     type: String,
@@ -59,19 +59,19 @@ const userSchema = new Schema<IUser>({
   address: {
     city: {
       type: String,
-      required: [true, 'City is required']
+      // required: [true, 'City is required']
     },
     district: {
       type: String,
-      required: [true, 'district is required']
+      // required: [true, 'district is required']
     },
     neighborhood: {
       type: String,
-      required: [true, 'neighborhood is required']
+      // required: [true, 'neighborhood is required']
     },
     addressInfo: {
       type: String,
-      required: [true, 'address info is required']
+      //required: [true, 'address info is required']
     },
   }
 },
