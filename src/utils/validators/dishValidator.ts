@@ -43,19 +43,6 @@ const createDishValidator = [
     .isArray({ min: 1 })
     .withMessage('images should be array of string with at least one image.'),
 
-  check('ratingsAverage')
-    .optional()
-    .isNumeric()
-    .withMessage('ratingsAverage must be a number')
-    .isLength({ min: 1 })
-    .withMessage('Rating must be above or equal 1.0')
-    .isLength({ max: 5 })
-    .withMessage('Rating must be below or equal 5.0'),
-  check('ratingsQuantity')
-    .optional()
-    .isNumeric()
-    .withMessage('ratingsQuantity must be a number'),
-
   validatorMiddleware,
 ];
 
