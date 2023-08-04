@@ -9,22 +9,34 @@ import cartRoutes from './routes/cart';
 import orderRoutes from './routes/order';
 import adminRoutes from './routes/admin';
 import contactUsRoute from './routes/contactUs';
+import pagesRoutes from './routes/pages';
+import googleAuth from './routes/googleAuth';
 
 import connectToDatabase from './db/connection';
 import bodyParser from 'body-parser';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './utils/swagger';
+import path from 'path';
+
+import "./config/passport";
 
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, './views'));
 
 app.use(express.json());
 app.use(bodyParser.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express TS Version');
-});
 
+
+
+// Pages Routes
+app.use('/', pagesRoutes);
+app.use('/auth', googleAuth);
+
+// API Routes
 app.use('/api/contact-us/', contactUsRoute);
 app.use('/api/users/', authRoutes);
 app.use('/api/dish/', dishRoutes);
