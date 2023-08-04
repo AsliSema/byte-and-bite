@@ -45,26 +45,22 @@ const checkQuantity = (
 const addDishToCart = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { dishID, quantity } = req.body;
-
-    const dish = await Dish.findById(dishID);
+    if (req.user.address.city === undefined) {
+      return next(new ApiError(StatusCodes.BAD_REQUEST, `Please add your address info first!`));
+    }
+    const dish = await Dish.findById(dishID).populate('cook', ['address']);
 
     let cart = await Cart.findOne({ user: req.user?._id });
 
     if (!dish) {
       return next(new ApiError(StatusCodes.BAD_REQUEST, `Dish not found!`));
     }
-    if (checkQuantity(quantity, dish.quantity) === qtyState.less_than_zero) {
-      return next(
-        new ApiError(
-          StatusCodes.BAD_REQUEST,
-          'Quantity is not available for this dish!'
-        )
-      );
-    }
-
-    // no cart yet
-    if (!cart) {
-      if (checkQuantity(quantity, dish.quantity) === qtyState.reqQty_bigger) {
+    else {
+      const cook = Object.assign(dish.cook);
+      if (cook.address.city !== req.user.address.city) {
+        return next(new ApiError(StatusCodes.BAD_REQUEST, `You can not a dish from other city!`));
+      }
+      if (checkQuantity(quantity, dish.quantity) === qtyState.less_than_zero) {
         return next(
           new ApiError(
             StatusCodes.BAD_REQUEST,
@@ -72,60 +68,72 @@ const addDishToCart = asyncHandler(
           )
         );
       }
-      cart = await Cart.create({
-        user: req.user?._id,
-        cartItems: [
-          {
-            product: dishID,
-            quantity,
-          },
-        ],
-        cookID: dish.cook,
+
+      // no cart yet
+      if (!cart) {
+        if (checkQuantity(quantity, dish.quantity) === qtyState.reqQty_bigger) {
+          return next(
+            new ApiError(
+              StatusCodes.BAD_REQUEST,
+              'Quantity is not available for this dish!'
+            )
+          );
+        }
+        cart = await Cart.create({
+          user: req.user?._id,
+          cartItems: [
+            {
+              product: dishID,
+              quantity,
+            },
+          ],
+          cookID: dish.cook,
+        });
+      }
+      // cart exists
+      else {
+        // check if dish exists in cart
+        const dishInCart = cart?.cartItems.find((item) => item.product == dishID);
+        if (dishInCart) {
+          // quantity = checkQuantity()
+          if (
+            checkQuantity(dishInCart.quantity + quantity, dish.quantity) ===
+            qtyState.reqQty_bigger
+          ) {
+            // return next(new ApiError(StatusCodes.NOT_ACCEPTABLE, `Quantity is not available for this dish!`))
+            dishInCart.quantity = dish.quantity;
+          } else {
+            dishInCart.quantity += quantity;
+          }
+        } else if (cart.cookID === dish.cook.toString() || cart.cookID === null) {
+          //We also need to checkQuantity inside here
+          if (
+            checkQuantity(req.body.quantity, dish.quantity) ===
+            qtyState.reqQty_bigger
+          ) {
+            cart.cartItems.push({ product: dishID, quantity: dish.quantity });
+            cart.cookID = dish.cook.toString();
+          } else {
+            cart.cartItems.push({ product: dishID, quantity });
+            cart.cookID = dish.cook.toString();
+          }
+        } else {
+          return next(
+            new ApiError(
+              StatusCodes.NOT_ACCEPTABLE,
+              `You can not add the dishes from different cooks `
+            )
+          );
+        }
+      }
+
+      cart.totalCartPrice = await calculateTotalInCart(cart);
+
+      await cart.save();
+      res.status(StatusCodes.OK).json({
+        data: cart,
       });
     }
-    // cart exists
-    else {
-      // check if dish exists in cart
-      const dishInCart = cart?.cartItems.find((item) => item.product == dishID);
-      if (dishInCart) {
-        // quantity = checkQuantity()
-        if (
-          checkQuantity(dishInCart.quantity + quantity, dish.quantity) ===
-          qtyState.reqQty_bigger
-        ) {
-          // return next(new ApiError(StatusCodes.NOT_ACCEPTABLE, `Quantity is not available for this dish!`))
-          dishInCart.quantity = dish.quantity;
-        } else {
-          dishInCart.quantity += quantity;
-        }
-      } else if (cart.cookID === dish.cook.toString() || cart.cookID === null) {
-        //We also need to checkQuantity inside here
-        if (
-          checkQuantity(req.body.quantity, dish.quantity) ===
-          qtyState.reqQty_bigger
-        ) {
-          cart.cartItems.push({ product: dishID, quantity: dish.quantity });
-          cart.cookID = dish.cook.toString();
-        } else {
-          cart.cartItems.push({ product: dishID, quantity });
-          cart.cookID = dish.cook.toString();
-        }
-      } else {
-        return next(
-          new ApiError(
-            StatusCodes.NOT_ACCEPTABLE,
-            `You can not add the dishes from different cooks `
-          )
-        );
-      }
-    }
-
-    cart.totalCartPrice = await calculateTotalInCart(cart);
-
-    await cart.save();
-    res.status(StatusCodes.OK).json({
-      data: cart,
-    });
   }
 );
 

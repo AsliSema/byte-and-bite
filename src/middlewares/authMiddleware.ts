@@ -69,7 +69,8 @@ const getUser = asyncHandler(
             const decoded = jwt.verify(token, config.jwt.secret) as Decoded;
 
             const currentUser = await User.findById(decoded.id);
-            if (!currentUser) {
+
+            if (!currentUser || !currentUser.address.city) {
                 req.user = undefined;
                 next();
             }

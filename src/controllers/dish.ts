@@ -31,7 +31,6 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
   // user not logged in
   if (!req.user) {
     const Dishes = await Dish.find().limit(10);
-
     res.json({ Dishes });
   }
   // user logged in
@@ -80,8 +79,6 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
       }
 
       let filteredDishes = dishes.filter((dish) => {
-        console.log('dish', dish);
-        console.log('dish.cook:', dish.cook);
         const cook = Object.assign(dish.cook);
         return (
           cook.address.city === req?.user?.address.city &&
@@ -127,10 +124,14 @@ const getDishById = asyncHandler(
  */
 const createDish = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+
+    if (req.user.address.city === undefined) {
+      return next(new ApiError(StatusCodes.BAD_REQUEST, `Please add your address info first!`));
+    }
+
     const {
       name,
       cook,
-      review,
       description,
       images,
       quantity,
@@ -149,7 +150,6 @@ const createDish = asyncHandler(
     const newDish = await Dish.create({
       name,
       cook: cookID,
-      review,
       description,
       images,
       quantity,
@@ -178,7 +178,6 @@ const updateDish = asyncHandler(
     const dishId = req.params.id;
     const {
       name,
-      review,
       description,
       images,
       quantity,
@@ -192,7 +191,6 @@ const updateDish = asyncHandler(
       dishId,
       {
         name,
-        review,
         description,
         images,
         quantity,
