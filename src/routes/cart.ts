@@ -2,7 +2,7 @@ import express from 'express';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 import {
   addDishToCart,
-  clearCart,
+  deleteCart,
   deleteDishFromCartItems,
   getLoggedUserCart,
   updateCartItemQuantity,
@@ -69,8 +69,8 @@ router
  * @swagger
  * /api/cart:
  *   delete:
- *     summary: Clear user cart
- *     description: Clear the cart items of the user.
+ *     summary: Delete user cart
+ *     description: Delete the cart items of the user.
  *     tags:
  *       - Cart
  *     responses:
@@ -81,7 +81,7 @@ router
  *       '403':
  *         description: FORBIDDEN.
  */
-  .delete(protect, allowedTo(['customer']), clearCart);
+  .delete(protect, allowedTo(['customer']), deleteCart);
 
 router
   .route('/:dishID')

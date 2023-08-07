@@ -215,7 +215,7 @@ const getLoggedUserCart = asyncHandler(
 // @route      DELETE   /api/cart
 // @access     private/customer
 
-const clearCart = asyncHandler(
+const deleteCart = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     await Cart.findOneAndDelete({ user: req.user?._id });
 
@@ -284,7 +284,7 @@ const updateCartItemQuantity = asyncHandler(
 export {
   addDishToCart,
   deleteDishFromCartItems,
-  clearCart,
+  deleteCart,
   updateCartItemQuantity,
   getLoggedUserCart,
 };
