@@ -42,7 +42,14 @@ router
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Dish'
+ *             type: object
+ *             properties:
+ *               dishID:
+ *                 type: string
+ *                 default: 64d0e5a8d6917c66a1491bda
+ *               quantity:
+ *                 type: number
+ *                 default: 3
  *     responses:
  *       '200':
  *         description: Successful response with updated cart information.

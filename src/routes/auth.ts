@@ -1,9 +1,10 @@
 import express from 'express';
-import { getAllUsers, getUserProfile, registerUser, signinUser, updateUser } from '../controllers/auth';
+import { getUserProfile, registerUser, signinUser, updateUser, deleteUser } from '../controllers/auth';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 const {
   signupValidator,
   signinValidator,
+  updateUserValidator
 } = require('../utils/validators/authValidator');
 
 const router = express.Router();
@@ -70,10 +71,44 @@ router.route('/signin').post(signinValidator, signinUser);
  *         description: Successful operation
  *       401:
  *         description: Unauthorized
+ *   delete:
+ *     summary: Delete user profile
+ *     tags: 
+ *      - Users
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
  */
 
-router.route('/profile').get(protect, getUserProfile);
+router.route('/profile')
+      .get(protect, getUserProfile)
 
+
+/**
+ * @swagger
+ * /api/users:
+ *   delete:
+ *     summary: Delete user profile
+ *     tags: 
+ *      - Users
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ */      
+router.route('/')
+      .delete(protect, deleteUser)
 
 
 /**
@@ -109,6 +144,6 @@ router.route('/profile').get(protect, getUserProfile);
  *         description: Forbidden 
  */
 
-router.route("/:userID").put(protect, allowedTo(["customer", "cook"]), updateUser);
+router.route("/:userID").put(protect, allowedTo(["customer", "cook"]), updateUserValidator, updateUser);
 
 export default router;

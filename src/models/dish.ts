@@ -151,8 +151,10 @@ export default Dish;
  *           type: string
  *           default: I craft my handmade içli köfte by meticulously selecting fine bulgur, tender beef, and fresh herbs while never compromising on quality and freshness. This unique touch holds the secret, absent in industrial productions, at the heart of my içli köfte; because for me, making içli köfte is not just a job, but also an expression of love and dedication reflecting my culture and values.
  *         specificAllergies:
- *           type: string
- *           default: []      
+ *           type: array
+ *           items:
+ *             type: string
+ *           default: ["gluten"]      
  *         quantity:
  *           type: number
  *           default: 27
@@ -163,8 +165,10 @@ export default Dish;
  *           type: string
  *           default: lunch
  *         images:
- *           type: string
- *           default: []                             
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["default.jpg"]                          
  */
 
 

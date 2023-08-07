@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "../types/express";
 import asyncHandler from "express-async-handler";
 import User, { Address, IUser } from "../models/user";
+import Dish from "../models/dish";
 import generateToken from '../utils/generateToken';
 import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../utils/apiError";
@@ -174,6 +175,12 @@ const updateUser = asyncHandler(async (req: Request, res: Response, next: NextFu
     });
 });
 
+
+/**
+ * Delete User 
+ * @route DELETE /api/admin/users/:userID & /api/users/:userID
+ * @access Private (admin) or (customer/cook who want to delete himself/herself)
+ */
 const deleteUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     let deletedUser;
 
@@ -185,6 +192,10 @@ const deleteUser = asyncHandler(async (req: Request, res: Response, next: NextFu
 
     if (!deletedUser) {
         return next(new ApiError(StatusCodes.BAD_REQUEST, "User not found"))
+    }
+
+    if(deletedUser.role === "cook"){
+        const relatedDishes = await Dish.deleteMany({cook: deletedUser._id})
     }
 
     res.status(StatusCodes.OK).json({
