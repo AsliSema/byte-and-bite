@@ -87,7 +87,7 @@ const addDishToCart = asyncHandler(
               quantity,
             },
           ],
-          cookID: dish.cook,
+          cookID: dish.cook._id,
         });
       }
       // cart exists
@@ -105,17 +105,17 @@ const addDishToCart = asyncHandler(
           } else {
             dishInCart.quantity += quantity;
           }
-        } else if (cart.cookID === dish.cook.toString() || cart.cookID === null) {
+        } else if (cart.cookID === dish.cook._id.toString() || cart.cookID === null) {
           //We also need to checkQuantity inside here
           if (
             checkQuantity(req.body.quantity, dish.quantity) ===
             qtyState.reqQty_bigger
           ) {
             cart.cartItems.push({ product: dishID, quantity: dish.quantity });
-            cart.cookID = dish.cook.toString();
+            cart.cookID = dish.cook._id.toString();
           } else {
             cart.cartItems.push({ product: dishID, quantity });
-            cart.cookID = dish.cook.toString();
+            cart.cookID = dish.cook._id.toString();
           }
         } else {
           return next(
