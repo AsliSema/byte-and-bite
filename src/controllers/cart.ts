@@ -257,8 +257,8 @@ const updateCartItemQuantity = asyncHandler(
     } else if (quantity <= 0 || quantity > maxQuantity) {
       return next(
         new ApiError(
-          StatusCodes.NOT_FOUND,
-          `Quantity must be more than 0 and less than ${maxQuantity}, please provide a valid value.`
+          StatusCodes.BAD_REQUEST,
+          `Quantity must be more than 0 and less or equal to ${maxQuantity}, please provide a valid value.`
         )
       );
     } else {

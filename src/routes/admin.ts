@@ -1,14 +1,17 @@
 import express from 'express';
-import { updateUser,getAllUsers, getUserProfile, registerUser, deleteUser } from '../controllers/auth';
+import { updateUser, getAllUsers, getUserProfile, registerUser, deleteUser } from '../controllers/auth';
 import { createDish, deleteDish, deleteReview, getAllDishes, updateDish } from '../controllers/dish';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
 import { getAllOrders, getOrderById, updateOrderStatus } from '../controllers/order';
 const {
+  createDishValidator,
   updateDishValidator,
-  deleteDishValidator
+  deleteDishValidator,
+  cookIdValidator
 } = require('../utils/validators/dishValidator');
 const {
-  signupValidator
+  signupValidator,
+  updateUserValidator
 } = require('../utils/validators/authValidator');
 
 const router = express.Router();
@@ -67,8 +70,8 @@ const router = express.Router();
  *         description: Forbidden  
  */
 router.route("/users")
-      .get(protect, allowedTo(["admin"]), getAllUsers)
-      .post(protect, allowedTo(["admin"]), signupValidator, registerUser)
+  .get(protect, allowedTo(["admin"]), getAllUsers)
+  .post(protect, allowedTo(["admin"]), signupValidator, registerUser)
 
 /**
  * @openapi
@@ -136,9 +139,9 @@ router.route("/users")
  */
 
 router.route('/users/:userID')
-      .get(protect, allowedTo(["admin"]), getUserProfile)
-      .put(protect, allowedTo(['admin']), updateUser)
-      .delete(protect, allowedTo(["admin"]), deleteUser)
+  .get(protect, allowedTo(["admin"]), getUserProfile)
+  .put(protect, allowedTo(['admin']), updateUserValidator, updateUser)
+  .delete(protect, allowedTo(["admin"]), deleteUser)
 
 // dish
 
@@ -185,7 +188,7 @@ router.route('/users/:userID')
  */
 router.route("/dishes")
   .get(protect, allowedTo(['admin']), getAllDishes)
-  .post(protect, allowedTo(['admin']), createDish);
+  .post(protect, allowedTo(['admin']), cookIdValidator, createDishValidator, createDish);
 
 /**
  * @openapi
@@ -317,29 +320,29 @@ router.route("/orders").get(protect, allowedTo(["admin"]), getAllOrders);
  */
 router.route("/order/:orderID")
   .get(protect, allowedTo(["admin"]), getOrderById)
-  
-/**
- * @swagger
- * /api/admin/order/{orderID}:
- *   put:
- *     summary: Update order status
- *     tags: 
- *       - Admin
- *     parameters:
- *       - in: path
- *         name: orderID
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the order
- *     responses:
- *       200:
- *         description: Successful operation
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- */ 
+
+  /**
+   * @swagger
+   * /api/admin/order/{orderID}:
+   *   put:
+   *     summary: Update order status
+   *     tags: 
+   *       - Admin
+   *     parameters:
+   *       - in: path
+   *         name: orderID
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: ID of the order
+   *     responses:
+   *       200:
+   *         description: Successful operation
+   *       401:
+   *         description: Unauthorized
+   *       403:
+   *         description: Forbidden
+   */
   .put(protect, allowedTo(["admin"]), updateOrderStatus);
 
 export default router;

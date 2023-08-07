@@ -69,6 +69,11 @@ const deleteDishValidator = [
   validatorMiddleware,
 ];
 
+const cookIdValidator = [
+  check('cook').notEmpty().withMessage('cookID is required.').isMongoId().withMessage('Invalid ID formate'),
+  validatorMiddleware,
+];
+
 const createReviewValidator = [
   check('dishID').isMongoId().withMessage('Invalid ID format'),
   check('comment')
@@ -125,6 +130,7 @@ export {
   getDishValidator,
   updateDishValidator,
   deleteDishValidator,
+  cookIdValidator,
   createReviewValidator,
   updateReviewValidator,
   deleteReviewValidator,
