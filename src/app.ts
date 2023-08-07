@@ -76,3 +76,5 @@ app.listen(config.server.port, () => {
 process.on('unhandledRejection', (reason: Error | any) => {
   console.error(`Unhandled Rejection: ${reason.message || reason}`);
 });
+
+export default app;

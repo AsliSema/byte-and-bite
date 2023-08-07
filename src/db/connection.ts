@@ -1,15 +1,24 @@
 import { config } from '../config/config';
 import mongoose, { ConnectOptions } from 'mongoose';
 
+let mongoURI;
+
+if (config.environment === 'development') {
+    mongoURI = config.mongo.devDB.url;
+} else if (config.environment === 'test') {
+    mongoURI = config.mongo.testDB.url;
+}
+
 const connectToDatabase = async () => {
-    if (config.mongo.url !== undefined) {
+    if (mongoURI !== undefined) {
         try {
-            await mongoose.connect(config.mongo.url, {
+            await mongoose.connect(mongoURI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             } as ConnectOptions);
             console.log(
-                'Connected to Distribution API Database - Initial Connection'
+                'Connected to Distribution API Database - Initial Connection',
+                mongoURI
             );
         } catch (err) {
             console.log(
