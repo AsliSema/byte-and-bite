@@ -151,8 +151,7 @@ describe('Auth routes', () => {
             const updatedUserInfo = {
                 firstname: 'Updated',
                 lastname: 'Info',
-                phone: '5559876543',
-                // Updated address properties
+                phone: '5559876543'
             };
     
             const updateResponse = await request(app)
@@ -191,36 +190,5 @@ describe('Auth routes', () => {
             expect(response.body.deletedUser).toHaveProperty('_id');
         });
     });
-
-/*     describe('PUT /api/users/:userID', () => {
-        it('updates own user profile', async () => {
-            const updatedData = {
-                firstname: 'Updated',
-                lastname: 'User',
-                email: 'updated@example.com',
-                phone: '5551234567',
-                address: {
-                    city: 'Updated City',
-                    district: 'Updated District',
-                    neighborhood: 'Updated Neighborhood',
-                    addressInfo: 'Updated Address Info',
-                },
-            };
-
-            const response = await request(app)
-                .put(`/api/users/${user._id}`)
-                .set('Authorization', `Bearer ${authToken}`)
-                .send(updatedData);
-
-            console.log("response", response)   
-
-            expect(response.statusCode).toBe(StatusCodes.OK);
-            expect(response.body).toHaveProperty('_id', user._id);
-            expect(response.body).toHaveProperty('firstname', updatedData.firstname);
-        });
-
-    }); */
-
-
     
 });
