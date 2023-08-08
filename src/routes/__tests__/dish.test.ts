@@ -89,7 +89,9 @@ describe('Dish routes', () => {
       expect(Array.isArray(response.body.data)).toBeTruthy();
     });
     it('should get all dishes that belong to that cook.', async () => {
-      const response = await request(app).get('/api/dish').set('Authorization', `Bearer ${authToken}`);
+      const response = await request(app)
+        .get('/api/dish')
+        .set('Authorization', `Bearer ${authToken}`);
       expect(response.statusCode).toBe(StatusCodes.OK);
       expect(Array.isArray(response.body.data)).toBeTruthy();
     });
@@ -112,7 +114,10 @@ describe('Dish routes', () => {
   /*Create new dish - 2 Test*/
   describe('POST /api/dish', () => {
     it('should create a new dish', async () => {
-      const response = await request(app).post('/api/dish').set('Authorization', `Bearer ${authToken}`).send(dish_test_2);
+      const response = await request(app)
+        .post('/api/dish')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(dish_test_2);
 
       expect(response.statusCode).toBe(StatusCodes.CREATED);
       expect(response.body.data.name).toBe(dish_test_2.name);
@@ -130,7 +135,10 @@ describe('Dish routes', () => {
         name: 'Updated Dish Name_1',
       };
 
-      const response = await request(app).put(`/api/dish/${dish.id}`).set('Authorization', `Bearer ${authToken}`).send(updates);
+      const response = await request(app)
+        .put(`/api/dish/${dish.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(updates);
       expect(response.body.data.name).toBe(updates.name);
     });
     it('should return 400 if dish not found', async () => {
@@ -138,7 +146,10 @@ describe('Dish routes', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app).put('/api/dish/123').set('Authorization', `Bearer ${authToken}`).send(updates);
+      const response = await request(app)
+        .put('/api/dish/123')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(updates);
 
       expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
     });
@@ -147,7 +158,9 @@ describe('Dish routes', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app).put(`/api/dish/${dish.id}`).send(updates);
+      const response = await request(app)
+        .put(`/api/dish/${dish.id}`)
+        .send(updates);
 
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     });
@@ -155,7 +168,9 @@ describe('Dish routes', () => {
   /*Delete dish by ID - 3 Tests*/
   describe('DELETE /api/dish/:id', () => {
     it('should delete a dish', async () => {
-      const response = await request(app).delete(`/api/dish/${dish.id}`).set('Authorization', `Bearer ${authToken}`);
+      const response = await request(app)
+        .delete(`/api/dish/${dish.id}`)
+        .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.statusCode).toBe(StatusCodes.OK);
       expect(response.body.data.id).toBe(dish.id);
@@ -164,7 +179,9 @@ describe('Dish routes', () => {
     it('should return 400 if dish does not exist', async () => {
       const invalidId = '123';
 
-      const response = await request(app).delete(`/api/dish/${invalidId}`).set('Authorization', `Bearer ${authToken}`);
+      const response = await request(app)
+        .delete(`/api/dish/${invalidId}`)
+        .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
     });
