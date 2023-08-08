@@ -30,8 +30,8 @@ const updateDishReviewsInfo = async (dishID: string) => {
 const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
   // user not logged in
   if (!req.user) {
-    const Dishes = await Dish.find().limit(10);
-    res.json({ Dishes });
+    const dishes = await Dish.find().limit(10);
+    res.status(StatusCodes.OK).json({ data: dishes });
   }
   // user logged in
   else {
@@ -46,8 +46,8 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
-      res.json({
-        dishes,
+      res.status(StatusCodes.OK).json({
+        data: dishes,
         count: count,
         page,
         pages: Math.ceil(count / pageSize),
@@ -63,8 +63,8 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
-      res.json({
-        dishes,
+      res.status(StatusCodes.OK).json({
+        data: dishes,
         count: count,
         page,
         pages: Math.ceil(count / pageSize),
@@ -90,8 +90,8 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
         .slice(pageSize * (page - 1))
         .slice(0, pageSize);
 
-      res.json({
-        dishes: filteredDishes,
+      res.status(StatusCodes.OK).json({
+        data: filteredDishes,
         count: count,
         page,
         pages: Math.ceil(count / pageSize),
@@ -113,7 +113,7 @@ const getDishById = asyncHandler(
     }
     const dishReviews = await Review.find({ dish: dishId });
     const dish = { ...dishToFind.toObject(), reviews: dishReviews };
-    res.status(StatusCodes.OK).json({ dish: dish });
+    res.status(StatusCodes.OK).json({ data: dish });
   }
 );
 
@@ -124,9 +124,13 @@ const getDishById = asyncHandler(
  */
 const createDish = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-
     if (req.user.address.city === undefined) {
-      return next(new ApiError(StatusCodes.BAD_REQUEST, `Please add your address info first!`));
+      return next(
+        new ApiError(
+          StatusCodes.BAD_REQUEST,
+          `Please add your address info first!`
+        )
+      );
     }
 
     const {
@@ -160,7 +164,7 @@ const createDish = asyncHandler(
 
     if (newDish) {
       res.status(StatusCodes.CREATED).json({
-        newDish,
+        data: newDish,
       });
     } else {
       return next(new ApiError(StatusCodes.BAD_REQUEST, 'Invalid dish data'));
@@ -204,7 +208,7 @@ const updateDish = asyncHandler(
 
     if (updatedDish) {
       res.status(StatusCodes.OK).json({
-        updatedDish,
+        data: updatedDish,
       });
     } else {
       return next(new ApiError(StatusCodes.NOT_FOUND, 'Dish not found'));
@@ -225,7 +229,7 @@ const deleteDish = asyncHandler(
 
     if (deletedDish) {
       res.status(StatusCodes.OK).json({
-        deletedDish,
+        data: deletedDish,
       });
     } else {
       return next(new ApiError(StatusCodes.NOT_FOUND, 'Dish not found'));
@@ -278,7 +282,7 @@ const createReview = asyncHandler(
         new ApiError(StatusCodes.BAD_REQUEST, 'Invalid review data!')
       );
     }
-    res.status(StatusCodes.CREATED).json({ newReview });
+    res.status(StatusCodes.CREATED).json({ data: newReview });
   }
 );
 
@@ -308,7 +312,7 @@ const deleteReview = asyncHandler(
 
     updateDishReviewsInfo(deletedReview.dish.toString());
 
-    res.status(StatusCodes.OK).json({ deletedReview });
+    res.status(StatusCodes.OK).json({ data: deletedReview });
   }
 );
 
@@ -342,7 +346,7 @@ const updateReview = asyncHandler(
 
     updateDishReviewsInfo(updatedReview.dish.toString());
 
-    res.status(StatusCodes.OK).json({ updatedReview });
+    res.status(StatusCodes.OK).json({ data: updatedReview });
   }
 );
 
