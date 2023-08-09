@@ -8,7 +8,6 @@ import Cart from '../../models/cart';
 import Order from '../../models/order';
 
 describe('Order routes', () => {
-
   let authToken;
   let customerUser;
   let dish;
@@ -22,7 +21,7 @@ describe('Order routes', () => {
     customerUser = await User.create({
       firstname: 'Test',
       lastname: 'User',
-      email: 'test@example.com',
+      email: 'test234@example.com',
       password: 'testpassword',
       phone: '5554567890',
       address: {
@@ -37,7 +36,7 @@ describe('Order routes', () => {
     cookUser = await User.create({
       firstname: 'Test Cook',
       lastname: 'User',
-      email: 'cook11@example.com',
+      email: 'cook432@example.com',
       password: 'testpassword',
       phone: '5554567890',
       address: {
@@ -73,7 +72,6 @@ describe('Order routes', () => {
       ],
       totalCartPrice: 34,
     });
-
   });
 
   afterAll(async () => {
