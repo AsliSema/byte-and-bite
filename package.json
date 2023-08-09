@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon src/app.ts",
-    "test": "jest --passWithNoTests --detectOpenHandles",
+    "test": "jest --passWithNoTests --no-cache --forceExit",
     "lint": "eslint --ignore-path .gitignore",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json)\"",
     "validate-staged": "lint-staged"
