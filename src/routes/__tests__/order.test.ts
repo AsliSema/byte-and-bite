@@ -2,29 +2,15 @@ import request from 'supertest';
 import app from '../../app';
 import Dish from '../../models/dish';
 import User from '../../models/user';
-import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 import generateToken from '../../utils/generateToken';
 import Cart from '../../models/cart';
 import Order from '../../models/order';
 
 describe('Order routes', () => {
-  const testUser = {
-    firstname: 'Test',
-    lastname: 'User',
-    email: 'test@example.com',
-    password: 'testpassword',
-    phone: '5554567890',
-    address: {
-      city: '16',
-      district: 'Nilüfer',
-      neighborhood: 'Ertuğrul Mah',
-      addressInfo: 'No: 16, Dr: 7',
-    },
-  };
 
   let authToken;
-  let user;
+  let customerUser;
   let dish;
   let cookUser;
   let cart;
@@ -33,15 +19,20 @@ describe('Order routes', () => {
 
   beforeAll(async () => {
     // Create a test user with a hashed password
-    const hashedPassword = await bcrypt.hash(testUser.password, 10);
-    user = await User.create({
-      firstname: testUser.firstname,
-      lastname: testUser.lastname,
-      email: testUser.email,
-      password: hashedPassword,
-      phone: testUser.phone,
-      address: testUser.address,
+    customerUser = await User.create({
+      firstname: 'Test',
+      lastname: 'User',
+      email: 'test@example.com',
+      password: 'testpassword',
+      phone: '5554567890',
+      address: {
+        city: '16',
+        district: 'Nilüfer',
+        neighborhood: 'Ertuğrul Mah',
+        addressInfo: 'No: 16, Dr: 7',
+      },
     });
+    authToken = generateToken(customerUser._id);
 
     cookUser = await User.create({
       firstname: 'Test Cook',
@@ -72,7 +63,7 @@ describe('Order routes', () => {
     });
 
     cart = await Cart.create({
-      user: user._id,
+      user: customerUser._id,
       cookID: cookUser._id,
       cartItems: [
         {
@@ -83,26 +74,11 @@ describe('Order routes', () => {
       totalCartPrice: 34,
     });
 
-    order = await Order.create({
-      user: user._id,
-      cookId: cookUser._id,
-      orderItems: [
-        {
-          product: dish._id,
-          quantity: 2,
-        },
-      ],
-      deliveryFee: 5,
-      deliveryAddress: 'Test Address',
-      totalOrderPrice: 34,
-    });
-
-    authToken = generateToken(user._id);
   });
 
   afterAll(async () => {
     // Cleanup: Delete the test user from the database
-    await User.findOneAndDelete({ email: testUser.email });
+    await User.findOneAndDelete({ email: customerUser.email });
     await Dish.findOneAndDelete({ _id: dish._id });
     await User.findOneAndDelete({ email: cookUser.email });
     await Cart.findOneAndDelete({ _id: cart._id });
@@ -114,13 +90,14 @@ describe('Order routes', () => {
       const response = await request(app)
         .post(`/api/order/${cart._id}`)
         .set('Authorization', `Bearer ${authToken}`);
+      order = response.body.data;
+
       expect(response.statusCode).toBe(StatusCodes.CREATED);
       expect(response.body.data.user).toEqual(cart.user.toString());
     });
     it('Should return 401 in case the user is not authorized', async () => {
       const response = await request(app).post(`/api/order/${cart._id}`);
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED);
-      //expect(response.body.data.user).toEqual(cart.user.toString());
     });
   });
 
