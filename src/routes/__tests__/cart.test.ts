@@ -70,7 +70,7 @@ describe('Cart routes', () => {
     });
 
     describe('POST /api/cart', () => {
-        it('adds dish to cart', async () => {
+        it('Should add dish to cart', async () => {
             const newItem = {
                 dishID: testDish._id.toString(),
                 quantity: 2
@@ -87,7 +87,7 @@ describe('Cart routes', () => {
     });
 
     describe('GET /api/cart when there is a cart', () => {
-        it('gets cart for customer', async () => {
+        it('Should get cart for customer', async () => {
             const response = await request(app)
                 .get('/api/cart')
                 .set('Authorization', `Bearer ${customerToken}`);
@@ -98,7 +98,7 @@ describe('Cart routes', () => {
     });
 
     describe('PUT /api/cart/{dishID}', () => {
-        it('updates dish quantity in cart', async () => {
+        it('Should update dish quantity in cart', async () => {
             const quantity = 3;
 
             const response = await request(app)
@@ -112,7 +112,7 @@ describe('Cart routes', () => {
     });
 
     describe('DELETE /api/cart/{dishID}', () => {
-        it('deletes a dish from cart', async () => {
+        it('Should delete a dish from cart', async () => {
             const response = await request(app)
                 .delete(`/api/cart/${testDish._id.toString()}`)
                 .set('Authorization', `Bearer ${customerToken}`)
@@ -124,7 +124,7 @@ describe('Cart routes', () => {
     });
 
     describe('DELETE /api/cart', () => {
-        it('deletes customer\'s cart', async () => {
+        it('Should delete customer\'s cart', async () => {
             const response = await request(app)
                 .delete(`/api/cart`)
                 .set('Authorization', `Bearer ${customerToken}`)
@@ -135,7 +135,7 @@ describe('Cart routes', () => {
     });
 
     describe('GET api/cart/', () => {
-        it('It returns 404 (NOT_FOUND) if the customer don\'t have a cart', async () => {
+        it('Should return 404 (NOT_FOUND) if the customer don\'t have a cart', async () => {
             const response = await request(app)
                 .get('/api/cart')
                 .set('Authorization', `Bearer ${customerToken}`);
