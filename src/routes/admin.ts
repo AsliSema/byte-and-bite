@@ -1,17 +1,33 @@
 import express from 'express';
-import { updateUser, getAllUsers, getUserProfile, registerUser, deleteUser } from '../controllers/auth';
-import { createDish, deleteDish, deleteReview, getAllDishes, updateDish } from '../controllers/dish';
+import {
+  updateUser,
+  getAllUsers,
+  getUserProfile,
+  registerUser,
+  deleteUser,
+} from '../controllers/auth';
+import {
+  createDish,
+  deleteDish,
+  deleteReview,
+  getAllDishes,
+  updateDish,
+} from '../controllers/dish';
 import { allowedTo, protect } from '../middlewares/authMiddleware';
-import { getAllOrders, getOrderById, updateOrderStatus } from '../controllers/order';
+import {
+  getAllOrders,
+  getOrderById,
+  updateOrderStatus,
+} from '../controllers/order';
 const {
   createDishValidator,
   updateDishValidator,
   deleteDishValidator,
-  cookIdValidator
+  cookIdValidator,
 } = require('../utils/validators/dishValidator');
 const {
   signupValidator,
-  updateUserValidator
+  updateUserValidator,
 } = require('../utils/validators/authValidator');
 
 const router = express.Router();
@@ -22,7 +38,7 @@ const router = express.Router();
  * @swagger
  * /api/admin/users/:
  *   get:
- *     summary: Get all users 
+ *     summary: Get all users
  *     description: Get a list of all users. This route is accessible to admins only.
  *     tags:
  *       - Admin
@@ -56,8 +72,8 @@ const router = express.Router();
  *               - lastname
  *               - email
  *               - password
- *               - phone 
- *               - address 
+ *               - phone
+ *               - address
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
@@ -67,11 +83,12 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  *       403:
- *         description: Forbidden  
+ *         description: Forbidden
  */
-router.route("/users")
-  .get(protect, allowedTo(["admin"]), getAllUsers)
-  .post(protect, allowedTo(["admin"]), signupValidator, registerUser)
+router
+  .route('/users')
+  .get(protect, allowedTo(['admin']), getAllUsers)
+  .post(protect, allowedTo(['admin']), signupValidator, registerUser);
 
 /**
  * @openapi
@@ -138,10 +155,11 @@ router.route("/users")
  *         description: User not found
  */
 
-router.route('/users/:userID')
-  .get(protect, allowedTo(["admin"]), getUserProfile)
+router
+  .route('/users/:userID')
+  .get(protect, allowedTo(['admin']), getUserProfile)
   .put(protect, allowedTo(['admin']), updateUserValidator, updateUser)
-  .delete(protect, allowedTo(["admin"]), deleteUser)
+  .delete(protect, allowedTo(['admin']), deleteUser);
 
 // dish
 
@@ -186,9 +204,16 @@ router.route('/users/:userID')
  *      403:
  *        description: Forbidden
  */
-router.route("/dishes")
+router
+  .route('/dishes')
   .get(protect, allowedTo(['admin']), getAllDishes)
-  .post(protect, allowedTo(['admin']), cookIdValidator, createDishValidator, createDish);
+  .post(
+    protect,
+    allowedTo(['admin']),
+    cookIdValidator,
+    createDishValidator,
+    createDish
+  );
 
 /**
  * @openapi
@@ -238,8 +263,20 @@ router.route("/dishes")
  */
 
 router
-  .put("/dishes/:id", protect, allowedTo(["admin"]), updateDishValidator, updateDish)
-  .delete("/dishes/:id", protect, allowedTo(["admin"]), deleteDishValidator, deleteDish);
+  .put(
+    '/dishes/:id',
+    protect,
+    allowedTo(['admin']),
+    updateDishValidator,
+    updateDish
+  )
+  .delete(
+    '/dishes/:id',
+    protect,
+    allowedTo(['admin']),
+    deleteDishValidator,
+    deleteDish
+  );
 
 // Review
 
@@ -266,13 +303,15 @@ router
  *         description: Forbidden
  */
 
-router.route("/dish/review/:reviewID").delete(protect, allowedTo(['admin']), deleteReview);
+router
+  .route('/dish/review/:reviewID')
+  .delete(protect, allowedTo(['admin']), deleteReview);
 
 // Order
 
 /**
  * @openapi
- * '/api/admin/orders':
+ * '/api/admin/order':
  *  get:
  *    tags:
  *    - Admin
@@ -294,14 +333,14 @@ router.route("/dish/review/:reviewID").delete(protect, allowedTo(['admin']), del
  *      403:
  *        description: Forbidden
  */
-router.route("/orders").get(protect, allowedTo(["admin"]), getAllOrders);
+router.route('/order').get(protect, allowedTo(['admin']), getAllOrders);
 
 /**
  * @swagger
  * /api/admin/order/{orderID}:
  *   get:
  *     summary: Get order by ID
- *     tags: 
+ *     tags:
  *       - Admin
  *     parameters:
  *       - in: path
@@ -318,15 +357,16 @@ router.route("/orders").get(protect, allowedTo(["admin"]), getAllOrders);
  *       403:
  *         description: Forbidden
  */
-router.route("/order/:orderID")
-  .get(protect, allowedTo(["admin"]), getOrderById)
+router
+  .route('/order/:orderID')
+  .get(protect, allowedTo(['admin']), getOrderById)
 
   /**
    * @swagger
    * /api/admin/order/{orderID}:
    *   put:
    *     summary: Update order status
-   *     tags: 
+   *     tags:
    *       - Admin
    *     parameters:
    *       - in: path
@@ -343,6 +383,6 @@ router.route("/order/:orderID")
    *       403:
    *         description: Forbidden
    */
-  .put(protect, allowedTo(["admin"]), updateOrderStatus);
+  .put(protect, allowedTo(['admin']), updateOrderStatus);
 
 export default router;
