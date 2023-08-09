@@ -375,6 +375,22 @@ router
    *           type: string
    *         required: true
    *         description: ID of the order
+   *     requestBody:
+   *       description: Updating value of isPaid & isDelivered. Cook can only access this API.
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               isPaid:
+   *                 type: boolean
+   *                 description: ID of the dish to be added to the cart.
+   *                 default: true
+   *               isDelivered:
+   *                 type: boolean
+   *                 description: Quantity of the dish to be added to the cart.
+   *                 default: true  
    *     responses:
    *       200:
    *         description: Successful operation
