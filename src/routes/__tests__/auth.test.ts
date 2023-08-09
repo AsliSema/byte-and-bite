@@ -61,7 +61,7 @@ describe('Auth routes', () => {
 
     describe('POST /api/users/signup', () => {
 
-        it('registers a new user', async () => {
+        it('Should register a new user', async () => {
 
             const response = await request(app)
                 .post('/api/users/signup')
@@ -74,7 +74,7 @@ describe('Auth routes', () => {
 
         });
 
-        it('fails to register with an already existing email', async () => {
+        it('Should fail to register with an already existing email', async () => {
             const response = await request(app)
                 .post('/api/users/signup')
                 .send(testUser);
@@ -85,7 +85,7 @@ describe('Auth routes', () => {
     });
 
     describe('POST /api/users/signin', () => {
-        it('signs in an existing user with correct credentials', async () => {
+        it('Should sign in an existing user with correct credentials', async () => {
             const response = await request(app)
                 .post('/api/users/signin')
                 .send({ email: testUser.email, password: testUser.password });
@@ -95,7 +95,7 @@ describe('Auth routes', () => {
             expect(response.body).toHaveProperty('firstname', testUser.firstname);
         });
 
-        it('fails to sign in with incorrect password', async () => {
+        it('Should fail to sign in with incorrect password', async () => {
             const response = await request(app)
                 .post('/api/users/signin')
                 .send({ email: testUser.email, password: 'incorrectpassword' });
@@ -107,7 +107,7 @@ describe('Auth routes', () => {
     });
 
     describe('GET /api/users/profile', () => {
-        it('returns user profile', async () => {
+        it('Should return user profile', async () => {
 
             const response = await request(app)
                 .get('/api/users/profile')
@@ -117,10 +117,19 @@ describe('Auth routes', () => {
             expect(response.body).toHaveProperty('_id');
             expect(response.body).toHaveProperty('firstname', user.firstname);
         });
+
+        it('Should return error if there is no logged in user', async () => {
+            const emptyToken = ""
+            const response = await request(app)
+                .get('/api/users/profile')
+                .set('Authorization', `Bearer ${emptyToken}`);
+
+            expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+        });
     })
 
     describe('PUT /api/users/:userID', () => {
-        it('updates user information', async () => {
+        it('Should update user information', async () => {
             const updatedUserInfo = {
                 firstname: 'Updated',
                 lastname: 'Info',
@@ -147,7 +156,7 @@ describe('Auth routes', () => {
 
         });
     
-        it('fails to update user information without authorization', async () => {
+        it('Should fail to update user information without authorization', async () => {
             const updatedUserInfo = {
                 firstname: 'Updated',
                 lastname: 'Info',
@@ -162,7 +171,7 @@ describe('Auth routes', () => {
             expect(updateResponse.body).toHaveProperty("message","You are not login, Please login to get access this route");
         });
     
-        it('fails to update user information with invalid data', async () => {
+        it('Should fail to update user information with invalid data', async () => {
             const updatedUserInfo = {
                 email: "testuser",
                 phone: "1234566783"
@@ -180,7 +189,7 @@ describe('Auth routes', () => {
 
 
     describe('DELETE /api/users', () => {
-        it('deletes own user profile', async () => {
+        it('Should delete own user profile', async () => {
             const response = await request(app)
                 .delete('/api/users')
                 .set('Authorization', `Bearer ${authToken}`);
@@ -188,6 +197,17 @@ describe('Auth routes', () => {
             expect(response.statusCode).toBe(StatusCodes.OK);
             expect(response.body).toHaveProperty('message', 'User deleted');
             expect(response.body.deletedUser).toHaveProperty('_id');
+            expect(response.body.deletedUser._id).toEqual(user._id.toString());
+
+        });
+
+        it('Should return error if there is no logged in user', async () => {
+            const emptyToken = ""
+            const response = await request(app)
+                .delete('/api/users')
+                .set('Authorization', `Bearer ${emptyToken}`);
+
+            expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED);
         });
     });
     
