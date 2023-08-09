@@ -1,16 +1,198 @@
+<!-- views/home.ejs -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <title>B&B</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Navbar Section -->
+    <nav class="sm:fixed sm:top-0 sm:left-0 sm:w-full sm:z-50 shadow-md">
+      <div class="navbar flex justify-between items-center bg-gray-50 py-4 px-16 text-Violet-800">
+        <!-- Left Section -->
+        <div class="left-section flex items-center">
+          <a href="/" class="ml-2 text-2xl font-bold text-purple-800">B&amp;B</a>
+        </div>
+        <!-- Centered section -->
+        <div class="links hidden md:flex space-x-4 text-purple-900">
+          <ul class="flex space-x-4">
+            <li><a href="/" class="hover:text-purple-400">Home</a></li>
+            <li><a href="#description" class="hover:text-purple-400">Description</a></li>
+            <li><a href="#" class="hover:text-purple-400">Tech Stack</a></li>
+            <li><a href="#" class="hover:text-purple-400">Files</a></li>
+            <li><a href="#" class="hover:text-purple-400">Team Members</a></li>
+          </ul>
+        </div>
+        <!-- Right Section -->
+        <div class="right-section flex items-center">
+          <a href="/login">
+            <i class="fas fa-user-circle text-gray-500 text-2xl hover:text-gray-400 hover:cursor-pointer"></i>
+          </a>
+        </div>
+        <!-- Burger icon for small screens -->
+        <div class="md:hidden flex items-center">
+          <button id="menu-toggle" class="block text-gray-600 hover:text-gray-500 focus:outline-none focus:text-gray-500">
+            <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M3 5h18a1 1 0 010 2H3a1 1 0 010-2zm0 7h18a1 1 0 010 2H3a1 1 0 110-2zm0 7h18a1 1 0 010 2H3a1 1 0 010-2z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Collapsible links for small screens -->
+      <div id="menu" class="hidden md:hidden bg-gray-50 py-4 px-8 text-Violet-800">
+        <ul class="flex flex-col justify-center items-center space-y-4 text-purple-900">
+          <li><a href="/" class="hover:text-purple-400">Home</a></li>
+          <li><a href="#description" class="hover:text-purple-400">Description</a></li>
+          <li><a href="#" class="hover:text-purple-400">Tech Stack</a></li>
+          <li><a href="#" class="hover:text-purple-400">Files</a></li>
+          <li><a href="#" class="hover:text-purple-400">Team Members</a></li>
+        </ul>
+      </div>
+    </nav>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Oauth App</title>
-</head>
+    <!-- banner Section -->
+    <section class="bg-gray-50 pt-28 pb-16 px-16">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <!-- Left Section -->
+          <div class="left-section md:w-1/2 text-center md:text-left flex flex-col justify-center">
+            <h2 class="text-4xl font-semibold text-gray-700">
+              Welcome to
+              <span class="text-4xl font-bold text-purple-800">Byte &amp; Bite</span>
+            </h2>
+            <p class="mt-4 text-gray-700 text-sm">
+              Short description about B&amp;B. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Short description about B&amp;B. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </p>
+            <button class="mt-6 bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded w-48 mx-auto md:mx-0">Shop Now</button>
+          </div>
+          <div class="right-section md:w-1/2 flex flex-col items-center hidden md:flex">
+            <div class="w-1/2 mx-auto">
+              <div class="flex flex-wrap">
+                <img src="https://www.freepnglogos.com/uploads/food-png/food-grass-fed-beef-foodservice-products-grass-run-farms-4.png" alt="Image 1" class="mr-4 rounded w-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<body>
-    <h1>This is home</h1>
-    <a href="/login">Go to login page</a>
-</body>
+    <!-- Describtion Section -->
+    <section class="bg-purple-900 text-white py-20 px-16" id="description">
+      <div class="container mx-auto px-4">
+        <div class="">
+          <h3 class="text-3xl font-bold">Byte &amp; <span class="text-purple-400">Byte</span></h3>
+          <p class="mt-4">
+            The website is a platform that connects the people who might not have to cook like students with local cooks who can offer homemade food. By offering them a variety of dishes. The purpose
+            of this website is to: Connect customers with cooks who offer homemade food. Support local cookers and help customers who are looking for homemade food.
+          </p>
+        </div>
+      </div>
+    </section>
 
+    <!-- Other Sections -->
+    <!--tech stack section, project files section, team members section -->
+    
+            
+<!-- Used Technologies Section -->
+<section class="bg-white py-16 px-16">
+  <div class="container mx-auto px-4">
+    <div class="">
+      <h3 class="text-3xl font-bold" style="color: #34194F;">Used <span class="text-purple-400">Technologies</span></h3>
+      <div class="flex flex-wrap mt-6 justify-center">
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2">
+          <img src="mongodb_logo.png" alt="MongoDB" class="w-full h-full object-cover" />
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2">
+          <img src="rest_api_logo.png" alt="Rest API" class="w-full h-full object-cover" />
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2">
+          <img src="express_logo.png" alt="Express.js" class="w-full h-full object-cover" />
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2">
+          <img src="typescript_logo.png" alt="TypeScript" class="w-full h-full object-cover" />
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2">
+          <img src="nodejs_logo.png" alt="Node.js" class="w-full h-full object-cover" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Project Files Section -->
+<section class="bg-purple-900 text-white py-10 sm:py-16 px-6 sm:px-16" id="project-files">
+  <div class="container mx-auto px-4">
+    <div class="text-left">
+      <h3 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Project Design Files</h3>
+      <div class="flex flex-col sm:flex-row sm:justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+        <div class="flex flex-col items-center">
+          <img src="db_schema_design.png" alt="DB Schema Design" class="rounded w-20 h-20 sm:w-24 sm:h-24" />
+          <p class="mt-2 text-center text-sm">DB Schema Design</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <img src="system_design.png" alt="System Design" class="rounded w-20 h-20 sm:w-24 sm:h-24" />
+          <p class="mt-2 text-center text-sm">System Design</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <img src="api_documentation.png" alt="API Documentation" class="rounded w-20 h-20 sm:w-24 sm:h-24" />
+          <p class="mt-2 text-center text-sm">API Documentation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team Members Section -->
+<section class="bg-gray-100 py-10 sm:py-16 px-6 sm:px-16" id="team-members">
+  <div class="container mx-auto px-4">
+    <div class="">
+      <h3 class="text-2xl sm:text-3xl font-bold text-purple-400">Our <span class="text-purple-800">Team</span></h3>
+      <p class="mt-4">
+        Meet our team:
+      </p>
+      <div class="flex flex-wrap mt-6 justify-center">
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full">
+          <img src="team_member1.jpg" alt="Team Member 1" class="w-full h-full object-cover" />
+          <p class="mt-2 text-center text-purple-900">Asli</p>
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full">
+          <img src="team_member2.jpg" alt="Team Member 2" class="w-full h-full object-cover" />
+          <p class="mt-2 text-center text-purple-900">Khaled</p>
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full">
+          <img src="team_member3.jpg" alt="Team Member 3" class="w-full h-full object-cover" />
+          <p class="mt-2 text-center text-purple-900">Nour</p>
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full">
+          <img src="team_member4.jpg" alt="Team Member 4" class="w-full h-full object-cover" />
+          <p class="mt-2 text-center text-purple-900">Berra</p>
+        </div>
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full">
+          <img src="team_member5.jpg" alt="Team Member 5" class="w-full h-full object-cover" />
+          <p class="mt-2 text-center text-purple-900">Ramin</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Footer Section -->
+<footer class="bg-purple-900 py-8 px-6">
+  <div class="container mx-auto px-4 flex justify-center items-center">
+    <a href="https://github.com/AsliSema/byte-and-bite" target="_blank" class="flex items-center text-white hover:text-purple-400">
+      <span>GitHub Repository</span>
+    </a>
+  </div>
+</footer>
+
+
+
+    <script>
+      document.getElementById('menu-toggle').addEventListener('click', function () {
+        document.getElementById('menu').classList.toggle('hidden');
+      });
+    </script>
+  </body>
 </html>
