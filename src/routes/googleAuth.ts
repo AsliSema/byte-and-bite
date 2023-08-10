@@ -18,7 +18,7 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
     //     email: req.user.email,
     //     token: generateToken(req.user._id),
     // });
-    res.render('home');
+    res.redirect('/');
 });
 
 
