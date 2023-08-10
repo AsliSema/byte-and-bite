@@ -6,12 +6,12 @@ import mongoose, { ConnectOptions } from 'mongoose';
 const connectToDatabase = async () => {
     let mongoURI;
 
-    if (config.environment === 'development') {
-        mongoURI = config.mongo.devDB.url;
-    } else if (config.environment === 'test') {
+    if (config.environment === 'test') {
         mongoURI = config.mongo.testDB.url;
     }
-
+    else {
+        mongoURI = config.mongo.devDB.url;
+    }
     if (mongoURI !== undefined) {
         try {
             await mongoose.connect(mongoURI, {
