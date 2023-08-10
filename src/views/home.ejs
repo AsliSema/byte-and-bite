@@ -1,479 +1,268 @@
 <html>
-  <head>
-    <title>B&B</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      html {
-        scroll-behavior: smooth;
-      }
-    </style>
-  </head>
-  <body class="bg-gray-100">
-    <!-- Navbar Section -->
-    <nav class="sm:fixed sm:top-0 sm:left-0 sm:w-full sm:z-50 shadow-md">
-      <div
-        class="navbar flex justify-between items-center bg-gray-50 py-4 px-16 text-Violet-800"
-      >
-        <!-- Left Section -->
-        <div class="left-section flex items-center">
-          <a href="/" class="ml-2 text-3xl font-bold text-purple-800"
-            >B&amp;B</a
-          >
-        </div>
-        <!-- Centered section -->
-        <div class="links hidden md:flex space-x-4 text-purple-900">
-          <ul class="flex space-x-4">
-            <li><a href="/" class="hover:text-yellow-300">Home</a></li>
-            <li>
-              <a href="#description" class="hover:text-yellow-300"
-                >Description</a
-              >
-            </li>
-            <li>
-              <a href="#Stack" class="hover:text-yellow-300">Tech Stack</a>
-            </li>
-            <li>
-              <a href="#project-files" class="hover:text-yellow-300">Files</a>
-            </li>
-            <li>
-              <a href="#team-members" class="hover:text-yellow-300"
-                >Team Members</a
-              >
-            </li>
-          </ul>
-        </div>
-        <!-- Right Section -->
-        <div class="right-section flex items-center">
-          <a href="/login">
-            <i
-              class="fas fa-user-circle text-gray-500 text-2xl hover:text-gray-400 hover:cursor-pointer"
-            ></i>
-          </a>
-        </div>
-        <!-- Burger icon for small screens -->
-        <div class="md:hidden flex items-center">
-          <button
-            id="menu-toggle"
-            class="block text-gray-600 hover:text-gray-500 focus:outline-none focus:text-gray-500"
-          >
-            <svg
-              class="w-6 h-6 fill-current"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M3 5h18a1 1 0 010 2H3a1 1 0 010-2zm0 7h18a1 1 0 010 2H3a1 1 0 110-2zm0 7h18a1 1 0 010 2H3a1 1 0 010-2z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
+
+<head>
+  <title>B&B</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <!-- Navbar Section -->
+  <nav class="sm:fixed sm:top-0 sm:left-0 sm:w-full sm:z-50 shadow-md">
+    <div class="navbar flex justify-between items-center bg-gray-50 py-4 px-16 text-Violet-800">
+      <!-- Left Section -->
+      <div class="left-section flex items-center">
+        <a href="/" class="ml-2 text-3xl font-bold text-purple-800">B&amp;B</a>
       </div>
-      <!-- Collapsible links for small screens -->
-      <div
-        id="menu"
-        class="hidden md:hidden bg-gray-50 py-4 px-8 text-Violet-800"
-      >
-        <ul
-          class="flex flex-col justify-center items-center space-y-4 text-purple-900"
-        >
+      <!-- Centered section -->
+      <div class="links hidden md:flex space-x-4 text-purple-900">
+        <ul class="flex space-x-4">
           <li><a href="/" class="hover:text-yellow-300">Home</a></li>
           <li>
             <a href="#description" class="hover:text-yellow-300">Description</a>
           </li>
-          <li><a href="#Stack" class="hover:text-yellow-300">Tech Stack</a></li>
+          <li>
+            <a href="#Stack" class="hover:text-yellow-300">Tech Stack</a>
+          </li>
           <li>
             <a href="#project-files" class="hover:text-yellow-300">Files</a>
           </li>
           <li>
-            <a href="#team-members" class="hover:text-yellow-300"
-              >Team Members</a
-            >
+            <a href="#team-members" class="hover:text-yellow-300">Team Members</a>
           </li>
         </ul>
       </div>
-    </nav>
-
-    <!-- banner Section -->
-    <section class="bg-gray-50 pt-28 pb-16 px-16">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-col md:flex-row items-center justify-between">
-          <!-- Left Section -->
-          <div
-            class="left-section md:w-1/2 text-center md:text-left flex flex-col justify-center"
-          >
-            <h2 class="text-4xl font-semibold text-gray-700">
-              Welcome to
-              <span class="text-4xl font-bold text-purple-800"
-                >Byte &amp; Bite</span
-              >
-            </h2>
-            <p class="mt-4 text-gray-600 text-md w-3/4">
-              The API effortlessly connects homemade food enthusiasts with local
-              cooks, facilitating a diverse culinary experience.
-            </p>
-            <button
-              class="mt-6 bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded w-48 mx-auto md:mx-0"
-            >
-              <a target="_blank" href="http://localhost:9090/api/docs/">
-                <span class="text-yellow-300">API</span> Documentation
-              </a>
-            </button>
-          </div>
-          <div
-            class="right-section md:w-1/2 flex flex-col items-center hidden md:flex"
-          >
-            <div class="w-1/2 mx-auto">
-              <div class="flex flex-wrap">
-                <img
-                  src="https://www.freepnglogos.com/uploads/food-png/food-grass-fed-beef-foodservice-products-grass-run-farms-4.png"
-                  alt="Image 1"
-                  class="mr-4 rounded w-full"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Describtion Section -->
-    <section
-      class="bg-purple-900 text-white py-20 pb-28 py px-16 border-t-8 border-double"
-      id="description"
-    >
-      <div class="container mx-auto px-4">
-        <div class="">
-          <h3 class="text-3xl font-bold">
-            Byte &amp; <span class="text-purple-400">Bite</span>
-          </h3>
-          <p class="mt-4">
-            The website is a platform that connects the people who might not
-            have to cook like students with local cooks who can offer homemade
-            food. By offering them a variety of dishes. The purpose of this
-            website is to: Connect customers with cooks who offer homemade food.
-            Support local cookers and help customers who are looking for
-            homemade food.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Used Technologies Section -->
-    <section class="bg-white py-20 px-16" id="Stack">
-      <div class="container mx-auto px-4">
-        <div class="">
-          <h3
-            class="text-4xl font-bold text-center mb-16"
-            style="color: #34194f"
-          >
-            Used
-            <span class="text-purple-800">Technologies</span>
-          </h3>
-          <div class="flex flex-wrap mt-6 justify-center">
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://cdn.icon-icons.com/icons2/2415/PNG/512/mongodb_plain_logo_icon_146422.png"
-                alt="MongoDB"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://icon-library.com/images/rest-api-icon/rest-api-icon-8.jpg"
-                alt="Rest API"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://moldoweb.com/wp-content/uploads/2022/03/6202fcdee5ee8636a145a41b_1234.png"
-                alt="Express.js"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://cdn.freebiesupply.com/logos/large/2x/jest-logo-png-transparent.png"
-                alt="Jest"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://w7.pngwing.com/pngs/915/519/png-transparent-typescript-hd-logo-thumbnail.png"
-                alt="TypeScript"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrgl7ES_7b6GL7vOiJfv05xeM7GH1v1uR66CDLdsqNw9daaVJPbLyOX1LJZvOm7QFEtms&usqp=CAU"
-                alt="swagger"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://seeklogo.com/images/P/postman-logo-0087CA0D15-seeklogo.com.png"
-                alt="postman"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://logowik.com/content/uploads/images/tailwind-css3232.logowik.com.webp"
-                alt="Tailwind "
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/5968/5968322.png"
-                alt="Node.js"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_vscode_icon_130084.png"
-                alt="VSCODE"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_ejs_icon_130626.png"
-                alt="EJS"
-                class="w-full h-full object-fit"
-              />
-            </div>
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2"
-            >
-              <img
-                src="https://cdn4.iconfinder.com/data/icons/iconsimple-logotypes/512/github-512.png"
-                alt="GH"
-                class="w-full h-full object-fit"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Project Files Section -->
-    <section
-      class="bg-purple-900 text-white py-20 px-6 border-double border-t-8"
-      id="project-files"
-    >
-      <div class="container mx-auto px-4 mb-8">
-        <div class="text-left">
-          <h3 class="text-4xl font-bold mb-12 text-center text-yellow-300">
-            Project Design Files
-          </h3>
-          <div
-            class="flex flex-col sm:flex-row sm:justify-center space-y-4 sm:space-y-0 sm:space-x-8"
-          >
-            <div class="flex flex-col items-center">
-              <iframe
-                style="border: 1px solid rgba(0, 0, 0, 0.1)"
-                width="400"
-                height="250"
-                src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F2LFORVZMP6cjBH9JvXeVML%2FDB-Schema-Design%3Ftype%3Ddesign%26node-id%3D0%253A1%26mode%3Ddesign%26t%3DkFO74QFPzkGnRtaT-1"
-                allowfullscreen
-              ></iframe>
-              <p class="mt-2 text-center text-md">
-                <a
-                  target="_blank"
-                  href="https://www.figma.com/file/2LFORVZMP6cjBH9JvXeVML/DB-Schema-Design?type=design&node-id=0-1&mode=design&t=UdlK6NtI1wBiGzZH-0"
-                  >🔗 DB Schema Design</a
-                >
-              </p>
-            </div>
-            <div class="flex flex-col items-center">
-              <iframe
-                style="border: 1px solid rgba(0, 0, 0, 0.1)"
-                width="400"
-                height="250"
-                src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FMrXH16NsjHrchEP3Bct6PK%2FArchitecture-Diagram%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DOwuDdW4WHkMxIMRH-1"
-                allowfullscreen
-              ></iframe>
-              <p class="mt-2 text-center text-md">
-                <a
-                  target="_blank"
-                  href="https://www.figma.com/file/MrXH16NsjHrchEP3Bct6PK/Architecture-Diagram?type=whiteboard&node-id=0-1&t=qSgPR4J6Qf8FWJOf-0"
-                  >🔗 System Design</a
-                >
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Team Members Section -->
-    <section class="bg-gray-100 pt-16 pb-2 px-6 sm:px-16" id="team-members">
-      <div class="container mx-auto px-4">
-        <div class="">
-          <h3 class="text-4xl font-bold text-purple-900 text-center pb-8">
-            Our <span class="text-purple-700">Team</span>
-          </h3>
-          <div class="flex flex-wrap mt-6 justify-center gap-4">
-            <div
-              class="w-36 h-36 bg-purple-400 rounded-full border border-[32px] border-dashed border-purple-600"
-            >
-              <img
-                src="https://avatars.githubusercontent.com/u/85573321?v=4"
-                alt="Team Member 1"
-                class="w-full h-full object-cover rounded-full"
-              />
-              <p class="mt-2 text-center text-purple-900">
-                Aslı
-                <span
-                  ><a target="_blank" href="https://github.com/AsliSema"
-                    ><i
-                      class="fa-brands fa-github text-lg text-gray-700"
-                    ></i></a
-                ></span>
-              </p>
-              <p class="mt-2 text-center text-purple-900"></p>
-            </div>
-            <div
-              class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600"
-            >
-              <img
-                src="https://avatars.githubusercontent.com/u/86200305?v=4"
-                alt="Team Member 2"
-                class="w-full h-full object-cover rounded-full"
-              />
-              <p class="mt-2 text-center text-purple-900">
-                Khaled
-                <span
-                  ><a target="_blank" href="https://github.com/Khaled6120"
-                    ><i
-                      class="fa-brands fa-github text-lg text-gray-700"
-                    ></i></a
-                ></span>
-              </p>
-            </div>
-            <div
-              class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600"
-            >
-              <img
-                src="https://avatars.githubusercontent.com/u/22308223?v=4"
-                alt="Team Member 3"
-                class="w-full h-full object-cover rounded-full"
-              />
-              <p class="mt-2 text-center text-purple-900">
-                Nour
-                <span
-                  ><a target="_blank" href="https://github.com/nourkrimesh"
-                    ><i
-                      class="fa-brands fa-github text-lg text-gray-700"
-                    ></i></a
-                ></span>
-              </p>
-            </div>
-            <div
-              class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600"
-            >
-              <img
-                src="https://avatars.githubusercontent.com/u/126883338?v=4"
-                alt="Team Member 4"
-                class="w-full h-full object-cover rounded-full"
-              />
-              <p class="mt-2 text-center text-purple-900">
-                Berra
-                <span
-                  ><a target="_blank" href="https://github.com/baraah-berra"
-                    ><i
-                      class="fa-brands fa-github text-lg text-gray-700"
-                    ></i></a
-                ></span>
-              </p>
-            </div>
-            <div
-              class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600"
-            >
-              <img
-                src="https://media.licdn.com/dms/image/D4D03AQHbX4Vxg8KTuw/profile-displayphoto-shrink_800_800/0/1685404880813?e=2147483647&v=beta&t=U9b5_MdBQMHQBLgtZ3P7x42rMgrJ6BmPgkDV9bedBf8"
-                alt="Team Member 5"
-                class="w-full h-full object-cover rounded-full"
-              />
-              <p class="mt-2 text-center text-purple-900">
-                Ramin
-                <span
-                  ><a target="_blank" href="https://github.com/Rsmk-code"
-                    ><i
-                      class="fa-brands fa-github text-lg text-gray-700"
-                    ></i></a
-                ></span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer Section -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-      <path
-        fill="#FCD34D"
-        fill-opacity="1"
-        d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-      ></path>
-    </svg>
-    <footer class="bg-yellow-300 pt-2 pb-8 px-6">
-      <div class="container mx-auto px-4 flex justify-center items-center">
-        <a
-          href="https://github.com/AsliSema/byte-and-bite"
-          target="_blank"
-          class="flex items-center text-lg"
-        >
-          <span class="text-gray-600 font-semibold hover:text-gray-100"
-            >GitHub Repository</span
-          >
+      <!-- Right Section -->
+      <div class="right-section flex items-center">
+        <a href="/login">
+          <i class="fas fa-user-circle text-gray-500 text-2xl hover:text-gray-400 hover:cursor-pointer"></i>
         </a>
       </div>
-    </footer>
+      <!-- Burger icon for small screens -->
+      <div class="md:hidden flex items-center">
+        <button id="menu-toggle" class="block text-gray-600 hover:text-gray-500 focus:outline-none focus:text-gray-500">
+          <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" d="M3 5h18a1 1 0 010 2H3a1 1 0 010-2zm0 7h18a1 1 0 010 2H3a1 1 0 110-2zm0 7h18a1 1 0 010 2H3a1 1 0 010-2z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- Collapsible links for small screens -->
+    <div id="menu" class="hidden md:hidden bg-gray-50 py-4 px-8 text-Violet-800">
+      <ul class="flex flex-col justify-center items-center space-y-4 text-purple-900">
+        <li><a href="/" class="hover:text-yellow-300">Home</a></li>
+        <li>
+          <a href="#description" class="hover:text-yellow-300">Description</a>
+        </li>
+        <li><a href="#Stack" class="hover:text-yellow-300">Tech Stack</a></li>
+        <li>
+          <a href="#project-files" class="hover:text-yellow-300">Files</a>
+        </li>
+        <li>
+          <a href="#team-members" class="hover:text-yellow-300">Team Members</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-    <script>
-      document
-        .getElementById('menu-toggle')
-        .addEventListener('click', function () {
-          document.getElementById('menu').classList.toggle('hidden');
-        });
-    </script>
-  </body>
+  <!-- banner Section -->
+  <section class="bg-gray-50 pt-28 pb-16 px-16">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+        <!-- Left Section -->
+        <div class="left-section md:w-1/2 text-center md:text-left flex flex-col justify-center">
+          <h2 class="text-4xl font-semibold text-gray-700">
+            Welcome to
+            <span class="text-4xl font-bold text-purple-800">Byte &amp; Bite</span>
+          </h2>
+          <p class="mt-4 text-gray-600 text-md w-3/4">
+            The API effortlessly connects homemade food enthusiasts with local
+            cooks, facilitating a diverse culinary experience.
+          </p>
+          <button class="mt-6 bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded w-48 mx-auto md:mx-0">
+            <a target="_blank" href="https://byteandbite.onrender.com/api/docs/">
+              <span class="text-yellow-300">API</span> Documentation
+            </a>
+          </button>
+        </div>
+        <div class="right-section md:w-1/2 flex flex-col items-center hidden md:flex">
+          <div class="w-1/2 mx-auto">
+            <div class="flex flex-wrap">
+              <img src="https://www.freepnglogos.com/uploads/food-png/food-grass-fed-beef-foodservice-products-grass-run-farms-4.png" alt="Image 1" class="mr-4 rounded w-full" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Describtion Section -->
+  <section class="bg-purple-900 text-white py-20 pb-28 py px-16 border-t-8 border-double" id="description">
+    <div class="container mx-auto px-4">
+      <div class="">
+        <h3 class="text-3xl font-bold">
+          Byte &amp; <span class="text-purple-400">Bite</span>
+        </h3>
+        <p class="mt-4">
+          The website is a platform that connects the people who might not
+          have to cook like students with local cooks who can offer homemade
+          food. By offering them a variety of dishes. The purpose of this
+          website is to: Connect customers with cooks who offer homemade food.
+          Support local cookers and help customers who are looking for
+          homemade food.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Used Technologies Section -->
+  <section class="bg-white py-20 px-16" id="Stack">
+    <div class="container mx-auto px-4">
+      <div class="">
+        <h3 class="text-4xl font-bold text-center mb-16" style="color: #34194f">
+          Used
+          <span class="text-purple-800">Technologies</span>
+        </h3>
+        <div class="flex flex-wrap mt-6 justify-center">
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://cdn.icon-icons.com/icons2/2415/PNG/512/mongodb_plain_logo_icon_146422.png" alt="MongoDB" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://icon-library.com/images/rest-api-icon/rest-api-icon-8.jpg" alt="Rest API" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://moldoweb.com/wp-content/uploads/2022/03/6202fcdee5ee8636a145a41b_1234.png" alt="Express.js" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://cdn.freebiesupply.com/logos/large/2x/jest-logo-png-transparent.png" alt="Jest" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://w7.pngwing.com/pngs/915/519/png-transparent-typescript-hd-logo-thumbnail.png" alt="TypeScript" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrgl7ES_7b6GL7vOiJfv05xeM7GH1v1uR66CDLdsqNw9daaVJPbLyOX1LJZvOm7QFEtms&usqp=CAU" alt="swagger" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://seeklogo.com/images/P/postman-logo-0087CA0D15-seeklogo.com.png" alt="postman" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://logowik.com/content/uploads/images/tailwind-css3232.logowik.com.webp" alt="Tailwind " class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968322.png" alt="Node.js" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_vscode_icon_130084.png" alt="VSCODE" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_ejs_icon_130626.png" alt="EJS" class="w-full h-full object-fit" />
+          </div>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden m-2 group transition-transform transform duration-300 hover:-translate-y-2">
+            <img src="https://cdn4.iconfinder.com/data/icons/iconsimple-logotypes/512/github-512.png" alt="GH" class="w-full h-full object-fit" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Files Section -->
+  <section class="bg-purple-900 text-white py-20 px-6 border-double border-t-8" id="project-files">
+    <div class="container mx-auto px-4 mb-8">
+      <div class="text-left">
+        <h3 class="text-4xl font-bold mb-12 text-center text-yellow-300">
+          Project Design Files
+        </h3>
+        <div class="flex flex-col sm:flex-row sm:justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+          <div class="flex flex-col items-center">
+            <iframe style="border: 1px solid rgba(0, 0, 0, 0.1)" width="400" height="250" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F2LFORVZMP6cjBH9JvXeVML%2FDB-Schema-Design%3Ftype%3Ddesign%26node-id%3D0%253A1%26mode%3Ddesign%26t%3DkFO74QFPzkGnRtaT-1" allowfullscreen></iframe>
+            <p class="mt-2 text-center text-md">
+              <a target="_blank" href="https://www.figma.com/file/2LFORVZMP6cjBH9JvXeVML/DB-Schema-Design?type=design&node-id=0-1&mode=design&t=UdlK6NtI1wBiGzZH-0">🔗 DB Schema Design</a>
+            </p>
+          </div>
+          <div class="flex flex-col items-center">
+            <iframe style="border: 1px solid rgba(0, 0, 0, 0.1)" width="400" height="250" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FMrXH16NsjHrchEP3Bct6PK%2FArchitecture-Diagram%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DOwuDdW4WHkMxIMRH-1" allowfullscreen></iframe>
+            <p class="mt-2 text-center text-md">
+              <a target="_blank" href="https://www.figma.com/file/MrXH16NsjHrchEP3Bct6PK/Architecture-Diagram?type=whiteboard&node-id=0-1&t=qSgPR4J6Qf8FWJOf-0">🔗 System Design</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Members Section -->
+  <section class="bg-gray-100 pt-16 pb-2 px-6 sm:px-16" id="team-members">
+    <div class="container mx-auto px-4">
+      <div class="">
+        <h3 class="text-4xl font-bold text-purple-900 text-center pb-8">
+          Our <span class="text-purple-700">Team</span>
+        </h3>
+        <div class="flex flex-wrap mt-6 justify-center gap-4">
+          <div class="w-36 h-36 bg-purple-400 rounded-full border border-[32px] border-dashed border-purple-600">
+            <img src="https://avatars.githubusercontent.com/u/85573321?v=4" alt="Team Member 1" class="w-full h-full object-cover rounded-full" />
+            <p class="mt-2 text-center text-purple-900">
+              Aslı
+              <span><a target="_blank" href="https://github.com/AsliSema"><i class="fa-brands fa-github text-lg text-gray-700"></i></a></span>
+            </p>
+            <p class="mt-2 text-center text-purple-900"></p>
+          </div>
+          <div class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600">
+            <img src="https://avatars.githubusercontent.com/u/86200305?v=4" alt="Team Member 2" class="w-full h-full object-cover rounded-full" />
+            <p class="mt-2 text-center text-purple-900">
+              Khaled
+              <span><a target="_blank" href="https://github.com/Khaled6120"><i class="fa-brands fa-github text-lg text-gray-700"></i></a></span>
+            </p>
+          </div>
+          <div class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600">
+            <img src="https://avatars.githubusercontent.com/u/22308223?v=4" alt="Team Member 3" class="w-full h-full object-cover rounded-full" />
+            <p class="mt-2 text-center text-purple-900">
+              Nour
+              <span><a target="_blank" href="https://github.com/nourkrimesh"><i class="fa-brands fa-github text-lg text-gray-700"></i></a></span>
+            </p>
+          </div>
+          <div class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600">
+            <img src="https://avatars.githubusercontent.com/u/126883338?v=4" alt="Team Member 4" class="w-full h-full object-cover rounded-full" />
+            <p class="mt-2 text-center text-purple-900">
+              Berra
+              <span><a target="_blank" href="https://github.com/baraah-berra"><i class="fa-brands fa-github text-lg text-gray-700"></i></a></span>
+            </p>
+          </div>
+          <div class="w-36 h-36 rounded-full border border-[32px] border-dashed border-purple-600">
+            <img src="https://media.licdn.com/dms/image/D4D03AQHbX4Vxg8KTuw/profile-displayphoto-shrink_800_800/0/1685404880813?e=2147483647&v=beta&t=U9b5_MdBQMHQBLgtZ3P7x42rMgrJ6BmPgkDV9bedBf8" alt="Team Member 5" class="w-full h-full object-cover rounded-full" />
+            <p class="mt-2 text-center text-purple-900">
+              Ramin
+              <span><a target="_blank" href="https://github.com/Rsmk-code"><i class="fa-brands fa-github text-lg text-gray-700"></i></a></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <path fill="#FCD34D" fill-opacity="1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+  </svg>
+  <footer class="bg-yellow-300 pt-2 pb-8 px-6">
+    <div class="container mx-auto px-4 flex justify-center items-center">
+      <a href="https://github.com/AsliSema/byte-and-bite" target="_blank" class="flex items-center text-lg">
+        <span class="text-gray-600 font-semibold hover:text-gray-100">GitHub Repository</span>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    document
+      .getElementById('menu-toggle')
+      .addEventListener('click', function () {
+        document.getElementById('menu').classList.toggle('hidden');
+      });
+  </script>
+</body>
+
 </html>

@@ -11,10 +11,9 @@ const connectToDatabase = async () => {
     } else if (config.environment === 'test') {
         mongoURI = config.mongo.testDB.url;
     }
-    console.log('1: trying to connect to database with connStr:', mongoURI);
+
     if (mongoURI !== undefined) {
         try {
-            console.log('2: trying to connect to database with connStr:', mongoURI);
             await mongoose.connect(mongoURI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
