@@ -25,24 +25,6 @@ const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || '';
 
 const environment = process.env.NODE_ENV || 'development';
 
-const TEST_CUSTOMER_EMAIL = process.env.TEST_CUSTOMER_EMAIL || '';
-const TEST_CUSTOMER_PASSWORD = process.env.TEST_CUSTOMER_PASSWORD || '';
-const TEST_CUSTOMER_TOKEN = process.env.TEST_CUSTOMER_TOKEN || '';
-const TEST_CUSTOMER_ID = process.env.TEST_CUSTOMER_ID || '';
-
-const TEST_COOK_EMAIL = process.env.TEST_COOK_EMAIL || '';
-const TEST_COOK_PASSWORD = process.env.TEST_COOK_PASSWORD || '';
-const TEST_COOK_TOKEN = process.env.TEST_COOK_TOKEN || '';
-const TEST_COOK_ID = process.env.TEST_COOK_ID || '';
-
-const TEST_ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || '';
-const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || '';
-const TEST_ADMIN_TOKEN = process.env.TEST_ADMIN_TOKEN || '';
-const TEST_ADMIN_ID = process.env.TEST_ADMIN_ID || '';
-
-const TEST_DISH_ID = process.env.TEST_DISH_ID || '';
-const TEST_CART_ID = process.env.TEST_CART_ID || '';
-
 export const config = {
     mongo: {
         devDB: {
@@ -69,30 +51,5 @@ export const config = {
         clientSecret: GOOGLE_CLIENT_SECRET,
         callbackUrl: GOOGLE_CALLBACK_URL,
     },
-    environment,
-    testCustomer: {
-        id: TEST_CUSTOMER_ID,
-        email: TEST_CUSTOMER_EMAIL,
-        password: TEST_CUSTOMER_PASSWORD,
-        token: TEST_CUSTOMER_TOKEN
-    },
-    testCook: {
-        id: TEST_COOK_ID,
-        email: TEST_COOK_EMAIL,
-        password: TEST_COOK_PASSWORD,
-        token: TEST_COOK_TOKEN
-    },
-    testAdmin: {
-        id: TEST_ADMIN_ID,
-        email: TEST_ADMIN_EMAIL,
-        password: TEST_ADMIN_PASSWORD,
-        token: TEST_ADMIN_TOKEN
-    },
-    testDish: {
-        id: TEST_DISH_ID
-    },
-    testCart: {
-        id: TEST_CART_ID
-    }
-
+    environment
 }
