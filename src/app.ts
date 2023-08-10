@@ -69,7 +69,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 app.use(errorHandlerMiddleware);
 
 export const server = app.listen(config.server.port, () => {
-  console.log(`Server is running at http://localhost:${config.server.port}`);
+  console.log(`The Server is running at http://localhost:${config.server.port}`);
 });
 
 // handle rejections outside express eg: database errors etc..

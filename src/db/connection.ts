@@ -1,18 +1,20 @@
 import { config } from '../config/config';
 import mongoose, { ConnectOptions } from 'mongoose';
 
-let mongoURI;
 
-if (config.environment === 'development') {
-    mongoURI = config.mongo.devDB.url;
-} else if (config.environment === 'test') {
-    mongoURI = config.mongo.testDB.url;
-}
 
 const connectToDatabase = async () => {
+    let mongoURI;
+
+    if (config.environment === 'development') {
+        mongoURI = config.mongo.devDB.url;
+    } else if (config.environment === 'test') {
+        mongoURI = config.mongo.testDB.url;
+    }
+    console.log('1: trying to connect to database with connStr:', mongoURI);
     if (mongoURI !== undefined) {
         try {
-            console.log('trying to connect to database with connStr:', mongoURI);
+            console.log('2: trying to connect to database with connStr:', mongoURI);
             await mongoose.connect(mongoURI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
