@@ -81,9 +81,12 @@ const getAllDishes = asyncHandler(async (req: Request, res: Response) => {
       let filteredDishes = dishes.filter((dish) => {
         const cook = Object.assign(dish.cook);
         return (
-          cook.address.city === req?.user?.address.city &&
-          cook.address.district === req?.user?.address.district
+          cook.address.city === req?.user?.address.city
         );
+        // return (
+        //   cook.address.city === req?.user?.address.city &&
+        //   cook.address.district === req?.user?.address.district
+        // );
       });
       count = filteredDishes.length;
       filteredDishes = filteredDishes

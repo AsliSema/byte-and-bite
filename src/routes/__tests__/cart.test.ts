@@ -1,6 +1,5 @@
 import request from 'supertest';
-import app from '../../app';
-import { config } from '../../config/config';
+import { server } from '../../app';
 import { StatusCodes } from 'http-status-codes';
 import User from '../../models/user';
 import generateToken from '../../utils/generateToken';
@@ -66,6 +65,7 @@ describe('Cart routes', () => {
     await User.findOneAndDelete({ email: customerUser.email });
     await User.findOneAndDelete({ email: cookUser.email });
     await Dish.findOneAndDelete({ _id: testDish._id });
+    server.close();
   });
 
   describe('POST /api/cart', () => {
@@ -75,7 +75,7 @@ describe('Cart routes', () => {
         quantity: 2,
       };
 
-      const response = await request(app)
+      const response = await request(server)
         .post('/api/cart')
         .set('Authorization', `Bearer ${customerToken}`)
         .send(newItem);
@@ -91,7 +91,7 @@ describe('Cart routes', () => {
 
   describe('GET /api/cart when there is a cart', () => {
     it('Should get cart for customer', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/cart')
         .set('Authorization', `Bearer ${customerToken}`);
 
@@ -104,7 +104,7 @@ describe('Cart routes', () => {
     it('Should update dish quantity in cart', async () => {
       const quantity = 3;
 
-      const response = await request(app)
+      const response = await request(server)
         .put(`/api/cart/${testDish._id.toString()}`)
         .set('Authorization', `Bearer ${customerToken}`)
         .send({ quantity });
@@ -123,7 +123,7 @@ describe('Cart routes', () => {
 
   describe('DELETE /api/cart/{dishID}', () => {
     it('Should delete a dish from cart', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .delete(`/api/cart/${testDish._id.toString()}`)
         .set('Authorization', `Bearer ${customerToken}`)
         .send();
@@ -139,7 +139,7 @@ describe('Cart routes', () => {
 
   describe('DELETE /api/cart', () => {
     it("Should delete customer's cart", async () => {
-      const response = await request(app)
+      const response = await request(server)
         .delete(`/api/cart`)
         .set('Authorization', `Bearer ${customerToken}`)
         .send();
@@ -150,7 +150,7 @@ describe('Cart routes', () => {
 
   describe('GET api/cart/', () => {
     it("Should return 404 (NOT_FOUND) if the customer don't have a cart", async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/cart')
         .set('Authorization', `Bearer ${customerToken}`);
 
