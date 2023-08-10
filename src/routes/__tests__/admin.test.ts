@@ -1,9 +1,8 @@
 import request from 'supertest';
-import app from '../../app';
+import { server } from '../../app';
 import { StatusCodes } from 'http-status-codes';
 import User from '../../models/user';
 import generateToken from '../../utils/generateToken';
-import bcrypt from 'bcrypt';
 import Order from '../../models/order';
 import Dish from '../../models/dish';
 
@@ -103,11 +102,12 @@ describe('test specific admin routes', () => {
     await User.findOneAndDelete({ email: adminUser.email });
     await Dish.findOneAndDelete({ _id: dish._id });
     await Order.findOneAndDelete({ _id: order._id });
+    server.close();
   });
 
   describe('DELETE /api/admin/users/userID', () => {
     it('Should delete user profile', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .delete(`/api/admin/users/${customerUser._id}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
@@ -115,7 +115,7 @@ describe('test specific admin routes', () => {
       expect(response.body).toHaveProperty('message', 'User deleted');
     });
     it('Should return 400 in case of unauthorized user', async () => {
-      const response = await request(app).delete(
+      const response = await request(server).delete(
         `/api/admin/users/${customerUser._id}`
       );
 
@@ -129,7 +129,7 @@ describe('test specific admin routes', () => {
 
   describe('PUT /api/admin/order/:orderID', () => {
     it('updates order status as admin', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .put(`/api/admin/order/${order._id}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .send({

@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../app';
+import { server } from '../../app';
 import Dish from '../../models/dish';
 import User from '../../models/user';
 import bcrypt from 'bcrypt';
@@ -79,17 +79,18 @@ describe('Dish routes', () => {
     await Dish.findOneAndDelete({ name: dish.name });
     await Dish.findOneAndDelete({ name: dish_test_2.name });
     await User.findOneAndDelete({ email: testUser2.email });
+    server.close();
   });
 
   /*Get All Dishes - 2 Test*/
   describe('GET /api/dish', () => {
     it('should get all dishes', async () => {
-      const response = await request(app).get('/api/dish');
+      const response = await request(server).get('/api/dish');
       expect(response.statusCode).toBe(StatusCodes.OK);
       expect(Array.isArray(response.body.data)).toBeTruthy();
     });
     it('should get all dishes that belong to that cook.', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/dish')
         .set('Authorization', `Bearer ${authToken}`);
       expect(response.statusCode).toBe(StatusCodes.OK);
@@ -99,14 +100,14 @@ describe('Dish routes', () => {
   /*Get Dish by ID - 2 Tests*/
   describe('GET /api/dish/:id', () => {
     it('should get a dish by id', async () => {
-      const response = await request(app).get(`/api/dish/${dish.id}`);
+      const response = await request(server).get(`/api/dish/${dish.id}`);
 
       expect(response.statusCode).toBe(StatusCodes.OK);
       expect(response.body.data.id).toBe(dish.id);
     });
 
     it('should return 400 if dish not found', async () => {
-      const response = await request(app).get('/api/dish/123');
+      const response = await request(server).get('/api/dish/123');
       expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
     });
   });
@@ -114,7 +115,7 @@ describe('Dish routes', () => {
   /*Create new dish - 2 Test*/
   describe('POST /api/dish', () => {
     it('should create a new dish', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .post('/api/dish')
         .set('Authorization', `Bearer ${authToken}`)
         .send(dish_test_2);
@@ -123,7 +124,7 @@ describe('Dish routes', () => {
       expect(response.body.data.name).toBe(dish_test_2.name);
     });
     it('should return 401 if customers try to create new dish.', async () => {
-      const response = await request(app).post('/api/dish').send(dish_test_2);
+      const response = await request(server).post('/api/dish').send(dish_test_2);
 
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     });
@@ -135,7 +136,7 @@ describe('Dish routes', () => {
         name: 'Updated Dish Name_1',
       };
 
-      const response = await request(app)
+      const response = await request(server)
         .put(`/api/dish/${dish.id}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send(updates);
@@ -146,7 +147,7 @@ describe('Dish routes', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app)
+      const response = await request(server)
         .put('/api/dish/123')
         .set('Authorization', `Bearer ${authToken}`)
         .send(updates);
@@ -158,7 +159,7 @@ describe('Dish routes', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app)
+      const response = await request(server)
         .put(`/api/dish/${dish.id}`)
         .send(updates);
 
@@ -168,7 +169,7 @@ describe('Dish routes', () => {
   /*Delete dish by ID - 3 Tests*/
   describe('DELETE /api/dish/:id', () => {
     it('should delete a dish', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .delete(`/api/dish/${dish.id}`)
         .set('Authorization', `Bearer ${authToken}`);
 
@@ -179,7 +180,7 @@ describe('Dish routes', () => {
     it('should return 400 if dish does not exist', async () => {
       const invalidId = '123';
 
-      const response = await request(app)
+      const response = await request(server)
         .delete(`/api/dish/${invalidId}`)
         .set('Authorization', `Bearer ${authToken}`);
 
@@ -187,7 +188,7 @@ describe('Dish routes', () => {
     });
 
     it('should return 401 UNAUTHORIZED if invalid token', async () => {
-      const response = await request(app).delete(`/api/dish/${dish.id}`);
+      const response = await request(server).delete(`/api/dish/${dish.id}`);
 
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     });

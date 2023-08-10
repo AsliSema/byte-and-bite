@@ -68,7 +68,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 // a global error middleware that catch errors and present them in a structured way.
 app.use(errorHandlerMiddleware);
 
-app.listen(config.server.port, () => {
+export const server = app.listen(config.server.port, () => {
   console.log(`Server is running at http://localhost:${config.server.port}`);
 });
 

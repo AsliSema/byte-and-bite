@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../app';
+import { server } from '../../app';
 import { StatusCodes } from 'http-status-codes';
 import User from '../../models/user';
 import generateToken from '../../utils/generateToken';
@@ -55,11 +55,12 @@ describe('Auth routes', () => {
   afterAll(async () => {
     // Cleanup: Delete the test user from the database
     await User.findOneAndDelete({ email: testUser.email });
+    server.close();
   });
 
   describe('POST /api/users/signup', () => {
     it('Should register a new user', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .post('/api/users/signup')
         .send(testUser);
 
@@ -69,7 +70,7 @@ describe('Auth routes', () => {
     });
 
     it('Should fail to register with an already existing email', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .post('/api/users/signup')
         .send(testUser);
 
@@ -83,7 +84,7 @@ describe('Auth routes', () => {
 
   describe('POST /api/users/signin', () => {
     it('Should sign in an existing user with correct credentials', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .post('/api/users/signin')
         .send({ email: testUser.email, password: testUser.password });
 
@@ -93,7 +94,7 @@ describe('Auth routes', () => {
     });
 
     it('Should fail to sign in with incorrect password', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .post('/api/users/signin')
         .send({ email: testUser.email, password: 'incorrectpassword' });
 
@@ -107,7 +108,7 @@ describe('Auth routes', () => {
 
   describe('GET /api/users/profile', () => {
     it('Should return user profile', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/users/profile')
         .set('Authorization', `Bearer ${authToken}`);
 
@@ -118,7 +119,7 @@ describe('Auth routes', () => {
 
     it('Should return error if there is no logged in user', async () => {
       const emptyToken = '';
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/users/profile')
         .set('Authorization', `Bearer ${emptyToken}`);
 
@@ -141,7 +142,7 @@ describe('Auth routes', () => {
       };
 
       // Make the update request
-      const updateResponse = await request(app)
+      const updateResponse = await request(server)
         .put(`/api/users/${user._id}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send(updatedUserInfo);
@@ -169,7 +170,7 @@ describe('Auth routes', () => {
         phone: '5559876543',
       };
 
-      const updateResponse = await request(app)
+      const updateResponse = await request(server)
         .put('/api/users/:userID')
         .send(updatedUserInfo);
 
@@ -187,7 +188,7 @@ describe('Auth routes', () => {
         // Invalid data, missing required fields or wrong formats
       };
 
-      const response = await request(app)
+      const response = await request(server)
         .put('/api/users/update')
         .set('Authorization', `Bearer ${authToken}`)
         .send(updatedUserInfo);
@@ -198,7 +199,7 @@ describe('Auth routes', () => {
 
   describe('DELETE /api/users', () => {
     it('Should delete own user profile', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .delete('/api/users')
         .set('Authorization', `Bearer ${authToken}`);
 
@@ -210,7 +211,7 @@ describe('Auth routes', () => {
 
     it('Should return error if there is no logged in user', async () => {
       const emptyToken = '';
-      const response = await request(app)
+      const response = await request(server)
         .delete('/api/users')
         .set('Authorization', `Bearer ${emptyToken}`);
 

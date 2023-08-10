@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../app';
+import app, { server } from '../../app';
 import Dish from '../../models/dish';
 import User from '../../models/user';
 import { StatusCodes } from 'http-status-codes';
@@ -81,6 +81,7 @@ describe('Order routes', () => {
     await User.findOneAndDelete({ email: cookUser.email });
     await Cart.findOneAndDelete({ _id: cart._id });
     await Order.findOneAndDelete({ _id: order._id });
+    server.close();
   });
 
   describe('POST /api/order/:cartId', () => {
