@@ -2,6 +2,8 @@
 
 Welcome to B&B! This project aims to connect customers with local cooks who offer delicious homemade food, providing a convenient and diverse culinary experience.
 
+<br />
+
 ## Table of Contents
 
 - [Project Overview](#project-overview)
@@ -14,6 +16,8 @@ Welcome to B&B! This project aims to connect customers with local cooks who offe
 - [Team Members](#team)
 - [Contact US](#Contact_us)
 
+<br />
+
 ## Project Overview
 
 The purpose of this website is to connect customers who are seeking homemade food options with local cooks who can provide a variety of dishes. The platform supports local cooks by offering them a platform to showcase their culinary skills while catering to the needs of individuals, such as students, who may not have the time to cook.
@@ -22,12 +26,13 @@ The purpose of this website is to connect customers who are seeking homemade foo
 <br />
 🔗 [API Documentation](https://byteandbite.onrender.com/api/docs/) 
 
+<br />
 
 ## Tech Stack
 
-Here are the technologies used in this project:
+### ➡️ Used Technologies:
 
-<table align="center">
+<table>
   <tr>
     <td align="center">
       <img width="80px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original-wordmark.svg" alt="Node.js" />
@@ -82,6 +87,55 @@ Here are the technologies used in this project:
   </tr>
 </table>
 
+<br />
+
+### ➡️ Used Packages:
+
+<table>
+  <tr>
+    <td align="center">
+      <p> mongoose </p>
+    </td>
+    <td align="center">
+      <p> jsonwebtoken </p>
+    </td>
+    <td align="center">
+      <p> passport </p>
+    </td>
+    <td align="center">
+      <p> bcrypt </p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <p> swagger-jsdoc </p>
+    </td>
+    <td align="center">
+      <p> swagger-ui-express </p>
+    </td>
+    <td align="center">
+      <p> express-async-handler </p>
+    </td>
+    <td align="center">
+      <p> http-status-codes </p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <p> supertest </p>
+    </td>
+    <td align="center">
+      <p> express-validator </p>
+    </td>
+    <td align="center">
+      <p> turkey-neighbourhoods </p>
+    </td>
+    <td align="center">
+      <p> mongoose </p>
+    </td>
+  </tr>
+</table>
+<br />
 
 ## Project Features
 
@@ -92,32 +146,36 @@ Here are the technologies used in this project:
 - Dish Listings: Cooks can post dishes along with images, descriptions, categories, and allergy information.
 - Order Management: Users can browse dishes, place orders, and view their order history.
 - Cart: Users can add and remove items from their cart before finalizing orders.
-- Admin Dashboard: Cooks and Admin have extra access for managing dishes and orders.
+- Admin Dashboard: Admin has extra access for managing users, dishes and orders.
 
+<br />
 
 ## Project Design
 
-### Entity-Relationship Diagram (ERD)
+### ➡️ Entity-Relationship Diagram (ERD)
 
 We began the project design phase by creating an Entity-Relationship Diagram (ERD) to visualize the database structure. The ERD helps us understand the relationships between different entities and how data flows through the system.
+
 Here's a simplified representation of ERD design:
 <br />
 🔗 [Database design](https://www.figma.com/file/2LFORVZMP6cjBH9JvXeVML/DB-Schema-Design?type=design&mode=design&t=gqa5Oq9e3ej3AX0t-1) 
 
 
-### Architecture Design
+### ➡️ Architecture Design
 
 Our project's architecture was meticulously planned to ensure scalability, maintainability, and efficient performance. We designed a high-level overview of the routes and endpoints that we implemented to provide a seamless user experience. The architecture encompasses:
 
 - **User Authentication:** Implemented using Passport.js with Google strategy.
 - **Routes and Endpoints:** Defined clear routes and endpoints for user authentication, dish management, orders, and user profiles.
-- **Database Integration:** Utilized MongoDB to store user data, dishes, and order information.
-- **Admin Dashboard:** Created a separate route for Admin to manage dishes and orders.
+- **Database Integration:** Utilized MongoDB to store user datas, dishes, carts and order informations.
+- **Admin Dashboard:** Created a separate route for Admin to manage users, dishes and orders.
 
 Here's a simplified representation of our architecture:
 <br />
 🔗 [Architecture design](https://www.figma.com/file/MrXH16NsjHrchEP3Bct6PK/Architecture-Diagram?type=whiteboard&t=gqa5Oq9e3ej3AX0t-1
 ) 
+
+<br />
 
 ## Functionality
 
@@ -128,9 +186,13 @@ To contribute to this project, you can follow these steps:
 3. Set up environment variables for database connection and authentication.
 4. Run the application: `npm start`
 
+<br />
+
 ## Contributing
 
 We welcome contributions from the community! Feel free to submit issues and pull requests.
+
+<br />
 
 ## Team Members
 
@@ -144,6 +206,8 @@ Meet the team members who contributed to this project:
 | Khaled Naes           | [Khaled6120](https://github.com/Khaled6120)     |
 | Berra Mahmut          | [baraah-berra](https://github.com/baraah-berra) |
 | M.NOUR KRIMESH        | [nourkrimesh](https://github.com/nourkrimesh)   |
+
+<br />
 
 ## Contact With B&B Team
 
